@@ -22,17 +22,21 @@ struct ARViewContainer : UIViewRepresentable {
         
         // Set rendering options
         arView.renderOptions = .disableAREnvironmentLighting
+        arView.renderOptions = .disableMotionBlur
         
         let wallAnchor = AnchorEntity(.plane(.vertical, classification: .wall, minimumBounds: .zero))
 
-        var imageMaterial = UnlitMaterial()
+        var imageMaterial = SimpleMaterial()
 
         if let texture = try? TextureResource.load(named: "MonaLisa") {
             print("Loaded texture")
-            imageMaterial.color = UnlitMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
+            imageMaterial.color = SimpleMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
         }
         
-        let plane = ModelEntity(mesh: .generatePlane(width: 0.5, height: 0.745), materials: [imageMaterial])
+        imageMaterial.metallic = 0.0
+        imageMaterial.roughness = 0.5
+        
+        let plane = ModelEntity(mesh: .generatePlane(width: 0.05, height: 0.0745), materials: [imageMaterial])
         
         let angle = -90 * (Float.pi / 180)
         let rotationMatrix = float4x4([1, 0, 0, 0],
@@ -41,6 +45,9 @@ struct ARViewContainer : UIViewRepresentable {
                                       [0, 0, 0, 1])
         
         plane.orientation = simd_quatf(rotationMatrix)
+        let scaleFactor: Float = 8.0
+        plane.scale = SIMD3(scaleFactor, scaleFactor, scaleFactor)
+        plane.position = SIMD3()
         
         wallAnchor.addChild(plane)
 
