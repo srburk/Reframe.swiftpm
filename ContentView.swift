@@ -5,9 +5,7 @@ struct ContentView: View {
     var body: some View {
         
         ZStack {
-            
             ARViewContainer()
-            
             ARViewOverlay()
         }
         .edgesIgnoringSafeArea(.all)

@@ -9,16 +9,22 @@ import Foundation
 import RealityKit
 import ARKit
 
+// MARK: Maybe keep as seperate class for handling certain events?
 class GalleryView: ARView {
     
     required init(frame: CGRect) {
         
-        super.init(frame: frame, cameraMode: .ar, automaticallyConfigureSession: true)
+        #if targetEnvironment(simulator)
+            super.init(frame: .zero)
+        #else
+            super.init(frame: frame, cameraMode: .ar, automaticallyConfigureSession: true)
+        #endif
         
         arView.renderOptions = .disableAREnvironmentLighting
         arView.renderOptions = .disableMotionBlur
         
         let wallAnchor = AnchorEntity(.plane(.vertical, classification: .wall, minimumBounds: .zero))
+
         
         arView.scene.anchors.append(wallAnchor)
         
@@ -32,6 +38,18 @@ class GalleryView: ARView {
     }
     
     var arView: ARView { return self }
+    
+    @MainActor override dynamic func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        guard !touches.isEmpty else { return }
+        let tappedLocation = touches.first!.location(in: arView)
+        if let tappedEntity = arView.entity(at: tappedLocation) {
+            let scaleFactor: Float = 1.0
+            tappedEntity.scale = SIMD3(scaleFactor, scaleFactor, scaleFactor)
+        } else {
+            print("No entity at location: \(tappedLocation)")
+        }
+    }
     
     func addMonaLisa() async {
         var imageMaterial = SimpleMaterial()
@@ -57,6 +75,8 @@ class GalleryView: ARView {
         plane.scale = SIMD3(scaleFactor, scaleFactor, scaleFactor)
         plane.position = SIMD3()
         
+        plane.collision = CollisionComponent(shapes: [ShapeResource.generateBox(size: SIMD3(0.05, 0.0745, 0.0))])
+                
         guard let wallAnchor = arView.scene.anchors.first else { return }
         wallAnchor.addChild(plane)
         

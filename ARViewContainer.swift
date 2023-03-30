@@ -10,9 +10,7 @@ import SwiftUI
 import RealityKit
 
 struct ARViewContainer : UIViewRepresentable {
-    
-    @State var captureFrame: Bool = false
-    
+        
     func makeUIView(context: Context) -> GalleryView {
         
         let arView = ARViewService.shared.arView
