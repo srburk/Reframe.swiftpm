@@ -23,12 +23,29 @@ final class ARViewService {
         }
     }
     
-    func loadPainting() {
+    func showAnchorIndicator() async {
         guard let wallAnchor = arView.scene.anchors.first else { return }
         
-        let entity = try? Entity.load(named: "frame")
-        guard entity != nil else { return }
+        let indicatorMaterial = UnlitMaterial(color: .blue)
+        let indicatorEntity = ModelEntity(mesh: .generateBox(size: 0.05), materials: [indicatorMaterial])
+        indicatorEntity.position = SIMD3(0.0, 0.0, 0.0)
         
-        wallAnchor.addChild(entity!)
+        wallAnchor.addChild(indicatorEntity)
+    }
+    
+    func loadPainting() {
+        
+        guard let wallAnchor = arView.scene.anchors.first else { return }
+        
+        print("Started load painting")
+        
+        _ = Entity.loadModelAsync(named: "newFrame")
+            .sink(receiveCompletion: { loadCompletion in
+                print("Error loading model")
+            }, receiveValue: { entity in
+                print("Found model")
+                self.arView.installGestures(.all, for: entity)
+                wallAnchor.addChild(entity)
+            })
     }
 }

@@ -34,27 +34,33 @@ struct ARViewOverlay: View {
             
             HStack(alignment: .center) {
                 
-                VStack {
-                    Button {
-                        // add a painting?
-                        ARViewService.shared.loadPainting()
-                    } label: {
-                        Image(systemName: "plus")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.white)
-                            .padding([.top, .bottom])
-                            .padding([.leading, .trailing], 30)
+                Button {
+                    Task {
+                        await ARViewService.shared.showAnchorIndicator()
                     }
-                    .background(.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-
+                } label: {
+                    Text("Show Anchor")
                 }
-                .frame(height: 100)
-                .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
-                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
-                .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 25 : 0)
-                .padding(.leading, (UIDevice.current.userInterfaceIdiom == .pad) ? 10 : 0)
+                
+                Button {
+                    // add a painting?
+                    ARViewService.shared.loadPainting()
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding([.top, .bottom])
+                        .padding([.leading, .trailing], 30)
+                }
+                .background(.blue)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                
             }
+            .frame(height: 100)
+            .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
+            .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 25 : 0)
+            .padding(.leading, (UIDevice.current.userInterfaceIdiom == .pad) ? 10 : 0)
         }
     }
 }
