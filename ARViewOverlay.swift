@@ -15,8 +15,7 @@ struct ARViewOverlay: View {
             
             HStack {
                 Button {
-                    // MARK: Take picture
-                    print("Picture!")
+                    ARViewService.shared.captureScreen()
                 } label: {
                     Image(systemName: "camera.shutter.button")
                         .font(.system(size: 20))
@@ -36,7 +35,7 @@ struct ARViewOverlay: View {
             HStack() {
                 
                 VStack {
-                    Text("This is a sheet")
+                    Text("ReFrame")
                 }
                 .frame(height: 150)
                 .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
