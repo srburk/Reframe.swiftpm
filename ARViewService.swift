@@ -22,4 +22,13 @@ final class ARViewService {
             UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
         }
     }
+    
+    func loadPainting() {
+        guard let wallAnchor = arView.scene.anchors.first else { return }
+        
+        let entity = try? Entity.load(named: "frame")
+        guard entity != nil else { return }
+        
+        wallAnchor.addChild(entity!)
+    }
 }

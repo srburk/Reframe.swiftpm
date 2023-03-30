@@ -28,9 +28,9 @@ class GalleryView: ARView {
         
         arView.scene.anchors.append(wallAnchor)
         
-        Task {
-            await addMonaLisa()
-        }
+//        Task {
+//            await addMonaLisa()
+//        }
     }
     
     required init?(coder decoder: NSCoder) {

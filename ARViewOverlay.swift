@@ -37,6 +37,7 @@ struct ARViewOverlay: View {
                 VStack {
                     Button {
                         // add a painting?
+                        ARViewService.shared.loadPainting()
                     } label: {
                         Image(systemName: "plus")
                             .font(.system(size: 20, weight: .bold))

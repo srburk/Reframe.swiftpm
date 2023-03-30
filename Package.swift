@@ -33,14 +33,18 @@ let package = Package(
                 .portraitUpsideDown(.when(deviceFamilies: [.pad]))
             ],
             capabilities: [
-                .camera(purposeString: "To place images in the world")
+                .camera(purposeString: "To place images in the world"),
+                .photoLibraryAdd(purposeString: "To save captures of the screen")
             ]
         )
     ],
     targets: [
         .executableTarget(
             name: "AppModule",
-            path: "."
+            path: ".",
+            resources: [
+                .process("Resources")
+            ]
         )
     ]
 )
