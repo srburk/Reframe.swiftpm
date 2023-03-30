@@ -39,13 +39,10 @@ final class ARViewService {
         
         print("Started load painting")
         
-        _ = Entity.loadModelAsync(named: "newFrame")
-            .sink(receiveCompletion: { loadCompletion in
-                print("Error loading model")
-            }, receiveValue: { entity in
-                print("Found model")
-                self.arView.installGestures(.all, for: entity)
-                wallAnchor.addChild(entity)
-            })
+        let entity = try? Entity.load(named: "frame")
+        guard entity != nil else { return }
+                
+//        self.arView.installGestures(.all, for: entity!)
+        wallAnchor.addChild(entity!)
     }
 }

@@ -28,9 +28,9 @@ class GalleryView: ARView {
         
         arView.scene.anchors.append(wallAnchor)
         
-//        Task {
-//            await addMonaLisa()
-//        }
+        Task {
+            await addMonaLisa()
+        }
     }
     
     required init?(coder decoder: NSCoder) {
@@ -44,8 +44,8 @@ class GalleryView: ARView {
         guard !touches.isEmpty else { return }
         let tappedLocation = touches.first!.location(in: arView)
         if let tappedEntity = arView.entity(at: tappedLocation) {
-            let scaleFactor: Float = 1.0
-            tappedEntity.scale = SIMD3(scaleFactor, scaleFactor, scaleFactor)
+//            let scaleFactor: Float = 1.0
+//            tappedEntity.scale = SIMD3(scaleFactor, scaleFactor, scaleFactor)
         } else {
             print("No entity at location: \(tappedLocation)")
         }
@@ -76,6 +76,8 @@ class GalleryView: ARView {
         plane.position = SIMD3()
         
         plane.collision = CollisionComponent(shapes: [ShapeResource.generateBox(size: SIMD3(0.05, 0.0745, 0.0))])
+        
+        arView.installGestures([.scale, .translation], for: plane)
                 
         guard let wallAnchor = arView.scene.anchors.first else { return }
         wallAnchor.addChild(plane)
