@@ -39,12 +39,14 @@ struct ARViewOverlay: View {
                         await ARViewService.shared.showAnchorIndicator()
                     }
                 } label: {
-                    Text("Show Anchor")
+                    Image(systemName: "signpost.right.fill")
+                        .foregroundColor(.primary)
                 }
                 
                 Button {
-                    // add a painting?
-                    ARViewService.shared.loadPainting()
+                    Task {
+                        await ARViewService.shared.createFrame()
+                    }
                 } label: {
                     Image(systemName: "plus")
                         .font(.system(size: 20, weight: .bold))

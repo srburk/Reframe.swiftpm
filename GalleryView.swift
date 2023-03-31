@@ -28,9 +28,6 @@ class GalleryView: ARView {
         
         arView.scene.anchors.append(wallAnchor)
         
-        Task {
-            await addMonaLisa()
-        }
     }
     
     required init?(coder decoder: NSCoder) {
@@ -49,38 +46,5 @@ class GalleryView: ARView {
         } else {
             print("No entity at location: \(tappedLocation)")
         }
-    }
-    
-    func addMonaLisa() async {
-        var imageMaterial = SimpleMaterial()
-
-        if let texture = try? TextureResource.load(named: "MonaLisa") {
-            print("Loaded texture")
-            imageMaterial.color = SimpleMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
-        }
-        
-        imageMaterial.metallic = 0.0
-        imageMaterial.roughness = 0.5
-        
-        let plane = ModelEntity(mesh: .generatePlane(width: 0.05, height: 0.0745), materials: [imageMaterial])
-        
-        let angle = -90 * (Float.pi / 180)
-        let rotationMatrix = float4x4([1, 0, 0, 0],
-                                      [0, cos(angle), sin(angle), 0],
-                                      [0, -sin(angle), cos(angle), 0],
-                                      [0, 0, 0, 1])
-        
-        plane.orientation = simd_quatf(rotationMatrix)
-        let scaleFactor: Float = 8.0
-        plane.scale = SIMD3(scaleFactor, scaleFactor, scaleFactor)
-        plane.position = SIMD3()
-        
-        plane.collision = CollisionComponent(shapes: [ShapeResource.generateBox(size: SIMD3(0.05, 0.0745, 0.0))])
-        
-        arView.installGestures([.scale, .translation], for: plane)
-                
-        guard let wallAnchor = arView.scene.anchors.first else { return }
-        wallAnchor.addChild(plane)
-        
     }
 }

@@ -33,16 +33,45 @@ final class ARViewService {
         wallAnchor.addChild(indicatorEntity)
     }
     
-    func loadPainting() {
+    func createFrame() async {
         
-        guard let wallAnchor = arView.scene.anchors.first else { return }
+        do {
+            let url = Bundle.main.url(forResource: "frame", withExtension: ".usdz")
+            guard url != nil else { return }
+            
+            let loadedModelEntity = try Entity.loadModel(contentsOf: url!)
+            guard let model = loadedModelEntity.model else { return }
+
+            loadedModelEntity.model = ModelComponent(mesh: model.mesh, materials: [
+                UnlitMaterial(color: .red),
+                createImageMaterial(),
+                UnlitMaterial(color: .green),
+                UnlitMaterial(color: .yellow)
+            ])
+            
+            // MARK: Generate box to scale exactly with model
+            loadedModelEntity.collision = CollisionComponent(shapes: [.generateBox(size: SIMD3(0.5, 0.5, 0.5))])
+            
+            guard let wallAnchor = arView.scene.anchors.first else { return }
+            wallAnchor.addChild(loadedModelEntity)
+            
+            arView.installGestures([.scale, .translation], for: loadedModelEntity)
+
+        } catch {
+            print("Failed to load USDZ: \(error)")
+        }
+    }
+    
+    func createImageMaterial() -> Material {
+        var imageMaterial = SimpleMaterial()
         
-        print("Started load painting")
+        imageMaterial.metallic = 0.0
+        imageMaterial.roughness = 0.5
         
-        let entity = try? Entity.load(named: "frame")
-        guard entity != nil else { return }
-                
-//        self.arView.installGestures(.all, for: entity!)
-        wallAnchor.addChild(entity!)
+        if let texture = try? TextureResource.load(named: "MonaLisa") {
+            imageMaterial.color = SimpleMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
+        }
+        
+        return imageMaterial
     }
 }
