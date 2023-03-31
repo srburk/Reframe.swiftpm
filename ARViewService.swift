@@ -43,10 +43,10 @@ final class ARViewService {
             guard let model = loadedModelEntity.model else { return }
 
             loadedModelEntity.model = ModelComponent(mesh: model.mesh, materials: [
-                UnlitMaterial(color: .red),
-                createImageMaterial(),
-                UnlitMaterial(color: .green),
-                UnlitMaterial(color: .yellow)
+                matteMaterial(),
+                imageMaterial(),
+                UnlitMaterial(color: .brown),
+                frameMaterial()
             ])
             
             // MARK: Generate box to scale exactly with model
@@ -58,11 +58,31 @@ final class ARViewService {
             arView.installGestures([.scale, .translation], for: loadedModelEntity)
 
         } catch {
-            print("Failed to load USDZ: \(error)")
+            print("Failed to load frame: \(error)")
         }
     }
     
-    func createImageMaterial() -> Material {
+    private func frameMaterial() -> Material {
+        var frameMaterial = SimpleMaterial()
+        
+        frameMaterial.color = SimpleMaterial.BaseColor(tint: .black)
+        frameMaterial.roughness = 0.5
+        frameMaterial.metallic = 0.0
+        
+        return frameMaterial
+    }
+    
+    private func matteMaterial() -> Material {
+        var matteMaterial = SimpleMaterial()
+        
+        matteMaterial.color = SimpleMaterial.BaseColor(tint: .white)
+        matteMaterial.roughness = 0.5
+        matteMaterial.metallic = 0.0
+        
+        return matteMaterial
+    }
+    
+    private func imageMaterial() -> Material {
         var imageMaterial = SimpleMaterial()
         
         imageMaterial.metallic = 0.0
