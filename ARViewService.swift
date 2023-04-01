@@ -35,8 +35,13 @@ final class ARViewService {
     
     func createFrame() async {
         
+        // MARK: Testing Frame Aspect Ratio Scaling
+        let images = ["MonaLisa", "StarryNight", "GirlWithAPearlEarring"]
+        
+        let image = UIImage(named: images.randomElement()!, in: .main, with: .none)
+        
         do {
-            let url = Bundle.main.url(forResource: "frame", withExtension: ".usdz")
+            let url = Bundle.main.url(forResource: "simple-plastic", withExtension: ".usdz")
             guard url != nil else { return }
             
             let loadedModelEntity = try Entity.loadModel(contentsOf: url!)
@@ -44,7 +49,7 @@ final class ARViewService {
 
             loadedModelEntity.model = ModelComponent(mesh: model.mesh, materials: [
                 matteMaterial(),
-                imageMaterial(),
+                imageMaterial(image!),
                 UnlitMaterial(color: .brown),
                 frameMaterial()
             ])
@@ -82,15 +87,24 @@ final class ARViewService {
         return matteMaterial
     }
     
-    private func imageMaterial() -> Material {
+    private func imageMaterial(_ image: UIImage) -> Material {
         var imageMaterial = SimpleMaterial()
         
         imageMaterial.metallic = 0.0
         imageMaterial.roughness = 0.5
         
-        if let texture = try? TextureResource.load(named: "MonaLisa") {
-            imageMaterial.color = SimpleMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
+        if let cgImage = image.cgImage {
+            do {
+                let texture = try TextureResource.generate(from: cgImage, options: .init(semantic: .color))
+                imageMaterial.color = SimpleMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
+            } catch {
+                print("Error loading image")
+            }
         }
+        
+//        if let texture = try? TextureResource.load(named: "MonaLisa") {
+//            imageMaterial.color = SimpleMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
+//        }
         
         return imageMaterial
     }
