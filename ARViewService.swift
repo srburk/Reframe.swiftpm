@@ -40,30 +40,36 @@ final class ARViewService {
         
         let image = UIImage(named: images.randomElement()!, in: .main, with: .none)
         
-        do {
-            let url = Bundle.main.url(forResource: "simple-plastic", withExtension: ".usdz")
-            guard url != nil else { return }
-            
-            let loadedModelEntity = try Entity.loadModel(contentsOf: url!)
-            guard let model = loadedModelEntity.model else { return }
+        if let cgImage = image?.cgImage {
+                        
+            do {
+                let url = Bundle.main.url(forResource: "simple-plastic", withExtension: ".usdz")
+                guard url != nil else { return }
+                
+                let loadedModelEntity = try Entity.loadModel(contentsOf: url!)
+                
+                loadedModelEntity.scale = SIMD3(1.26, 1.0, 1.0)
+                
+                guard let model = loadedModelEntity.model else { return }
 
-            loadedModelEntity.model = ModelComponent(mesh: model.mesh, materials: [
-                matteMaterial(),
-                imageMaterial(image!),
-                UnlitMaterial(color: .brown),
-                frameMaterial()
-            ])
-            
-            // MARK: Generate box to scale exactly with model
-            loadedModelEntity.collision = CollisionComponent(shapes: [.generateBox(size: SIMD3(0.5, 0.5, 0.5))])
-            
-            guard let wallAnchor = arView.scene.anchors.first else { return }
-            wallAnchor.addChild(loadedModelEntity)
-            
-            arView.installGestures([.scale, .translation], for: loadedModelEntity)
+                loadedModelEntity.model = ModelComponent(mesh: model.mesh, materials: [
+                    matteMaterial(),
+                    imageMaterial(cgImage),
+                    UnlitMaterial(color: .brown),
+                    frameMaterial()
+                ])
+                                
+                // MARK: Generate box to scale exactly with model
+                loadedModelEntity.collision = CollisionComponent(shapes: [.generateBox(size: SIMD3(0.5, 0.5, 0.5))])
+                
+                guard let wallAnchor = arView.scene.anchors.first else { return }
+                wallAnchor.addChild(loadedModelEntity)
+                
+                arView.installGestures([.scale, .translation], for: loadedModelEntity)
 
-        } catch {
-            print("Failed to load frame: \(error)")
+            } catch {
+                print("Failed to load frame: \(error)")
+            }
         }
     }
     
@@ -87,19 +93,17 @@ final class ARViewService {
         return matteMaterial
     }
     
-    private func imageMaterial(_ image: UIImage) -> Material {
+    private func imageMaterial(_ image: CGImage) -> Material {
         var imageMaterial = SimpleMaterial()
         
         imageMaterial.metallic = 0.0
         imageMaterial.roughness = 0.5
         
-        if let cgImage = image.cgImage {
-            do {
-                let texture = try TextureResource.generate(from: cgImage, options: .init(semantic: .color))
-                imageMaterial.color = SimpleMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
-            } catch {
-                print("Error loading image")
-            }
+        do {
+            let texture = try TextureResource.generate(from: image, options: .init(semantic: .color))
+            imageMaterial.color = SimpleMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
+        } catch {
+            print("Error loading image")
         }
         
 //        if let texture = try? TextureResource.load(named: "MonaLisa") {
