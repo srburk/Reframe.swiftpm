@@ -110,10 +110,6 @@ final class ARViewService {
             print("Error loading image")
         }
         
-//        if let texture = try? TextureResource.load(named: "MonaLisa") {
-//            imageMaterial.color = SimpleMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
-//        }
-        
         return imageMaterial
     }
 }
