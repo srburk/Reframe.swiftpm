@@ -20,13 +20,12 @@ class GalleryView: ARView {
             super.init(frame: frame, cameraMode: .ar, automaticallyConfigureSession: true)
         #endif
         
+        let mainAnchor = AnchorEntity(.plane(.vertical, classification: .wall, minimumBounds: .zero))
+        
         arView.renderOptions = .disableAREnvironmentLighting
         arView.renderOptions = .disableMotionBlur
         
-        let wallAnchor = AnchorEntity(.plane(.vertical, classification: .wall, minimumBounds: .zero))
-
-        
-        arView.scene.anchors.append(wallAnchor)
+        arView.scene.anchors.append(mainAnchor)
         
     }
     

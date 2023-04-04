@@ -46,21 +46,25 @@ final class ARViewService {
                 let url = Bundle.main.url(forResource: "simple-plastic", withExtension: ".usdz")
                 guard url != nil else { return }
                 
-                let loadedModelEntity = try Entity.loadModel(contentsOf: url!)
-                
-                loadedModelEntity.scale = SIMD3(1.26, 1.0, 1.0)
+                let loadedModelEntity = try ModelEntity.loadModel(named: "simple-plastic", in: .main)
                 
                 guard let model = loadedModelEntity.model else { return }
 
+//                let imageAspectRatio: Float = Float(cgImage.width) / Float(cgImage.height)
+//                let loadedModelEntityAspectRatio = model.mesh.bounds.max.x / model.mesh.bounds.max.y
+                
                 loadedModelEntity.model = ModelComponent(mesh: model.mesh, materials: [
                     matteMaterial(),
                     imageMaterial(cgImage),
                     UnlitMaterial(color: .brown),
                     frameMaterial()
                 ])
+                
+//                loadedModelEntity.scale = SIMD3(repeating: imageAspectRatio / loadedModelEntityAspectRatio)
                                 
                 // MARK: Generate box to scale exactly with model
-                loadedModelEntity.collision = CollisionComponent(shapes: [.generateBox(size: SIMD3(0.5, 0.5, 0.5))])
+//                loadedModelEntity.collision = CollisionComponent(shapes: [.generateBox(size: SIMD3(0.5, 0.5, 0.5))])
+                loadedModelEntity.generateCollisionShapes(recursive: true)
                 
                 guard let wallAnchor = arView.scene.anchors.first else { return }
                 wallAnchor.addChild(loadedModelEntity)
