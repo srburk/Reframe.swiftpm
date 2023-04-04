@@ -14,6 +14,7 @@ struct ARViewOverlay: View {
         VStack(alignment: .leading) {
             
             HStack {
+                Spacer()
                 Button {
                     ARViewService.shared.captureScreen()
                 } label: {
@@ -24,24 +25,13 @@ struct ARViewOverlay: View {
                 }
                 .background(.regularMaterial)
                 .clipShape(Circle())
-
-                Spacer()
             }
             .padding(.top, 50)
-            .padding(.leading, 10)
+            .padding(.trailing, 10)
             
             Spacer()
             
             HStack(alignment: .center) {
-                
-//                Button {
-//                    Task {
-//                        await ARViewService.shared.showAnchorIndicator()
-//                    }
-//                } label: {
-//                    Image(systemName: "signpost.right.fill")
-//                        .foregroundColor(.primary)
-//                }
                 
                 Button {
                     Task {
@@ -58,10 +48,13 @@ struct ARViewOverlay: View {
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 
             }
-            .frame(height: 100)
+            .frame(height: 200)
+            
             .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
-            .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 25 : 0)
+            
+            .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 20))
+            
+            .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 28 : 0)
             .padding(.leading, (UIDevice.current.userInterfaceIdiom == .pad) ? 10 : 0)
         }
     }

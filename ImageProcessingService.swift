@@ -41,8 +41,10 @@ final class ImageProcessingService {
         
         UIRectFill(CGRect(origin: .zero, size: newImageSize))
         
-        let scaledImageWidth = image.size.width * 0.75
-        let scaledImageHeight = image.size.height * 0.75
+        let matScale = 0.8
+        
+        let scaledImageWidth = image.size.width * matScale
+        let scaledImageHeight = image.size.height * matScale
         
         let imageRect = CGRect(x: (newImageSize.width - scaledImageWidth) / 2, y: (newImageSize.height - scaledImageHeight) / 2, width: scaledImageWidth, height: scaledImageHeight)
         
