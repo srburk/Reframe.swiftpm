@@ -18,20 +18,21 @@ struct PictureSelectionView: View {
                     NavigationLink {
                         Text("Hello World")
                     } label: {
-                        Image("MonaLisa", bundle: .main)
+                        Image("MonaLisa")
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: 150, height: 200)
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .border(.black)
+//                            .clipShape(RoundedRectangle(cornerRadius: 15))
                             .padding()
                     }
                     
-                    Image("GirlWithAPearlEarring", bundle: .main)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 150, height: 200)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                        .padding()
+//                    Image("GirlWithAPearlEarring", bundle: .main)
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fill)
+//                        .frame(width: 150, height: 200)
+//                        .clipShape(RoundedRectangle(cornerRadius: 15))
+//                        .padding()
                 }
                 Spacer()
             }

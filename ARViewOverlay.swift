@@ -34,18 +34,18 @@ struct ARViewOverlay: View {
             
             HStack(alignment: .center) {
                 
-                Button {
-                    Task {
-                        await ARViewService.shared.showAnchorIndicator()
-                    }
-                } label: {
-                    Image(systemName: "signpost.right.fill")
-                        .foregroundColor(.primary)
-                }
+//                Button {
+//                    Task {
+//                        await ARViewService.shared.showAnchorIndicator()
+//                    }
+//                } label: {
+//                    Image(systemName: "signpost.right.fill")
+//                        .foregroundColor(.primary)
+//                }
                 
                 Button {
                     Task {
-                        await ARViewService.shared.createFrame()
+                        await ARViewService.shared.newFrame()
                     }
                 } label: {
                     Image(systemName: "plus")
