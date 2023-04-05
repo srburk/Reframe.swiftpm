@@ -29,7 +29,7 @@ class GalleryView: ARView, ARSessionDelegate {
         arView.session.delegate = self
         
         arView.scene.anchors.append(mainAnchor)
-        
+                
         let sessionConfiguration = ARWorldTrackingConfiguration()
         sessionConfiguration.planeDetection = [.vertical]
         sessionConfiguration.frameSemantics = .personSegmentationWithDepth

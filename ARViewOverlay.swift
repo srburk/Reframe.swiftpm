@@ -7,12 +7,34 @@
 
 import Foundation
 import SwiftUI
+import ARKit
 
 struct ARViewOverlay: View {
+    
+    @EnvironmentObject var arVM: ARViewModel
+    
+    @ViewBuilder
+    private func arCameraStateView() -> some View {
+        switch(arVM.cameraTrackingState) {
+            case .limited(.excessiveMotion):
+                Text("Excessive Motion")
+            case .limited(.initializing):
+                Text("Initializing")
+            case .limited(.relocalizing):
+                Text("Trying to resume")
+            case .normal:
+                Text("Normal")
+            case .notAvailable:
+                Text("Not Availible")
+            default:
+                Text("Probably too dark")
+        }
+    }
+    
     var body: some View {
         
         VStack(alignment: .leading) {
-            
+                        
             HStack {
                 Spacer()
                 Button {
@@ -30,8 +52,10 @@ struct ARViewOverlay: View {
             .padding(.trailing, 10)
             
             Spacer()
-            
-            HStack(alignment: .center) {
+                        
+            VStack {
+                
+                arCameraStateView()
                 
                 Button {
                     Task {
