@@ -42,13 +42,13 @@ class GalleryView: ARView, ARSessionDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-        if arView.scene.anchors.contains(where: {
-            $0.name == "MainWallAnchor"
-        }) {
-            print("Added anchor")
-        }
-    }
+//    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+//        if arView.scene.anchors.contains(where: {
+//            $0.name == "MainWallAnchor"
+//        }) {
+//            print("Added anchor")
+//        }
+//    }
     
     var arView: ARView { return self }
     
