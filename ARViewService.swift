@@ -36,7 +36,7 @@ final class ARViewService {
     func newFrame() async {
         
         let images = ["MonaLisa", "StarryNight", "GirlWithAPearlEarring"]
-        
+                
         let image = UIImage(named: images.randomElement()!, in: .main, with: .none)!
         
         do {
@@ -47,7 +47,7 @@ final class ARViewService {
         
             guard let frameModel = frameEntity.model else { return }
             
-            let aspectRatio = frameModel.height() / frameModel.width()
+            let aspectRatio = frameModel.width() / frameModel.height()
 
             frameEntity.model = ModelComponent(mesh: frameModel.mesh, materials: [
                 imageMaterial(ImageProcessingService.shared.process(image: image, aspectRatio: CGFloat(aspectRatio)).cgImage!),

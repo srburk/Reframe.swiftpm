@@ -13,24 +13,26 @@ final class ImageProcessingService {
     static let shared = ImageProcessingService()
     
     func process(image: UIImage, aspectRatio: CGFloat) -> UIImage {
+                
+        var workingImage = image
         
-        print("Aspect Ratio of Frame is: \(aspectRatio)")
+        let imageAspectRatio = workingImage.size.width / workingImage.size.height
         
-        let imageAspectRatio = image.size.width / image.size.height
-        
-        print("Aspect Ratio of Image is: \(imageAspectRatio)")
-        
+        if imageAspectRatio >= 1, let cgImage = workingImage.cgImage {
+            workingImage = UIImage(cgImage: cgImage, scale: 1.0, orientation: .left)
+        }
+                
         var newImageWidth: Double
         var newImageHeight: Double
         
         if aspectRatio > imageAspectRatio {
-            newImageWidth = image.size.height * aspectRatio
-            newImageHeight = image.size.height
+            newImageWidth = workingImage.size.height * aspectRatio
+            newImageHeight = workingImage.size.height
         } else {
-            newImageWidth = image.size.width
-            newImageHeight = image.size.width / aspectRatio
+            newImageWidth = workingImage.size.width
+            newImageHeight = workingImage.size.width / aspectRatio
         }
-        
+
         print("The image should be width: \(newImageWidth) and height \(newImageHeight)")
         
         let newImageSize = CGSize(width: newImageWidth, height: newImageHeight)
@@ -43,20 +45,18 @@ final class ImageProcessingService {
         
         let matScale = 0.8
         
-        let scaledImageWidth = image.size.width * matScale
-        let scaledImageHeight = image.size.height * matScale
+        let scaledImageWidth = workingImage.size.width * matScale
+        let scaledImageHeight = workingImage.size.height * matScale
         
         let imageRect = CGRect(x: (newImageSize.width - scaledImageWidth) / 2, y: (newImageSize.height - scaledImageHeight) / 2, width: scaledImageWidth, height: scaledImageHeight)
+            
+        workingImage.draw(in: imageRect)
         
-//        let imageRect = CGRect(x: (newImageSize.width - image.size.width) / 2, y: (newImageSize.height - image.size.height) / 2, width: image.size.width, height: image.size.height)
-    
-        image.draw(in: imageRect)
-        
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()!
+        let newImageData = UIGraphicsGetImageFromCurrentImageContext()!.jpegData(compressionQuality: 0.5)!
         UIGraphicsEndImageContext()
         
-        return newImage
-        
+        return UIImage(data: newImageData) ?? UIImage()
+                
     }
     
 }
