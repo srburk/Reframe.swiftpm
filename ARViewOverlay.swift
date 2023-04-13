@@ -9,6 +9,33 @@ import Foundation
 import SwiftUI
 import ARKit
 
+struct ARSelectionView: View {
+    
+    @ViewBuilder
+    private func arEditingButton(systemName: String) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 15)
+                .stroke(Color.gray)
+                .foregroundColor(.clear)
+            
+            Image(systemName: systemName)
+                .font(.system(size: 35))
+                .foregroundColor(.primary)
+        }
+    }
+    
+    var body: some View {
+        
+        HStack(alignment: .center, spacing: 20) {
+            arEditingButton(systemName: "photo")
+            arEditingButton(systemName: "photo.artframe")
+            arEditingButton(systemName: "square.inset.filled")
+        }
+        
+        Spacer()
+    }
+}
+
 struct ARViewOverlay: View {
     
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
@@ -31,54 +58,67 @@ struct ARViewOverlay: View {
         }
     }
     
+    @ViewBuilder
+    private func capsuleOverlayControls() -> some View {
+        VStack(alignment: .center, spacing: 15) {
+            Button {
+                ARViewService.shared.captureScreen()
+            } label: {
+                Image(systemName: "camera.shutter.button")
+                    .foregroundColor(.black)
+            }
+            
+            Divider()
+                        
+            Button {
+                Task {
+                    await ARViewService.shared.newFrame()
+                }
+            } label: {
+                Image(systemName: "plus")
+                    .foregroundColor(.black)
+            }
+
+        }
+        .frame(width: 40, height: 100)
+        .background(Color.lightGray, in: RoundedRectangle(cornerRadius: 20))
+    }
+    
     var body: some View {
         
         VStack(alignment: .leading) {
                         
             HStack {
                 Spacer()
-                Button {
-                    ARViewService.shared.captureScreen()
-                } label: {
-                    Image(systemName: "camera.shutter.button")
-                        .font(.system(size: 20))
-                        .foregroundColor(.primary)
-                        .padding(20)
-                }
-                .background(.regularMaterial)
-                .clipShape(Circle())
+                capsuleOverlayControls()
             }
             .padding(.top, 50)
-            .padding(.trailing, 10)
+            .padding(.trailing, 20)
             
             Spacer()
                         
-            VStack {
+            VStack(alignment: .center) {
                 
-                arCameraStateView()
-                
-                Text((arVM.userSelectedEntity != nil) ? "Assigned Entity" : "No Entity")
-                
-                Button {
-                    Task {
-                        await ARViewService.shared.newFrame()
-                    }
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white)
-                        .padding([.top, .bottom])
-                        .padding([.leading, .trailing], 30)
+                HStack(alignment: .center) {
+                    Text("4in x 8in")
+                    
+                    Spacer()
+                    
+                    Image(systemName: "xmark.circle.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundColor(.gray)
+                        .font(.system(size: 30))
                 }
-                .background(.blue)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
                 
+                ARSelectionView()
+                                
             }
+            .padding()
+            .padding(.bottom, 5)
             .frame(height: 200)
-            
             .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
             
-            .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 20))
+            .background(Color.lightGray, in: RoundedRectangle(cornerRadius: 20))
             
             .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 28 : 0)
             .padding(.leading, (UIDevice.current.userInterfaceIdiom == .pad) ? 10 : 0)

@@ -6,6 +6,7 @@
 //
 
 import RealityKit
+import SwiftUI
 
 extension ModelComponent {
     func width() -> Float {
@@ -14,4 +15,8 @@ extension ModelComponent {
     func height() -> Float {
         return self.mesh.bounds.max.z - self.mesh.bounds.min.z
     }
+}
+
+extension Color {
+    public static let lightGray = Color(red: 236/255, green: 236/255, blue: 237/255)
 }
