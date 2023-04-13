@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    @ObservedObject var arVM = ARViewModel()
-    
+        
     var body: some View {
         
 //        PictureSelectionView()
@@ -20,7 +18,6 @@ struct ContentView: View {
             ARViewOverlay()
         }
         .edgesIgnoringSafeArea(.all)
-        .environmentObject(arVM)
     }
 }
 

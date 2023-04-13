@@ -46,7 +46,7 @@ final class ARViewService {
             let frameEntity = try ModelEntity.loadModel(contentsOf: frameURL)
         
             guard let frameModel = frameEntity.model else { return }
-            
+                
             let aspectRatio = frameModel.width() / frameModel.height()
 
             frameEntity.model = ModelComponent(mesh: frameModel.mesh, materials: [
@@ -67,7 +67,7 @@ final class ARViewService {
             }
             
             frameEntity.generateCollisionShapes(recursive: true)
-            
+        
             arView.installGestures([.translation, .scale], for: frameEntity)
             
             guard let wallAnchor = arView.scene.anchors.first else { return }

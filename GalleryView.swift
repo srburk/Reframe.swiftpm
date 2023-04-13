@@ -8,10 +8,11 @@
 import Foundation
 import RealityKit
 import ARKit
+import SwiftUI
 
 // MARK: Maybe keep as seperate class for handling certain events?
-class GalleryView: ARView, ARSessionDelegate {
-    
+class GalleryView: ARView {
+        
     required init(frame: CGRect) {
         
         #if targetEnvironment(simulator)
@@ -25,9 +26,7 @@ class GalleryView: ARView, ARSessionDelegate {
         
         arView.renderOptions = .disableAREnvironmentLighting
         arView.renderOptions = .disableMotionBlur
-        
-        arView.session.delegate = self
-        
+                
         arView.scene.anchors.append(mainAnchor)
                 
         let sessionConfiguration = ARWorldTrackingConfiguration()
@@ -42,14 +41,6 @@ class GalleryView: ARView, ARSessionDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-//    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-//        if arView.scene.anchors.contains(where: {
-//            $0.name == "MainWallAnchor"
-//        }) {
-//            print("Added anchor")
-//        }
-//    }
-    
     var arView: ARView { return self }
     
     @MainActor override dynamic func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -57,10 +48,9 @@ class GalleryView: ARView, ARSessionDelegate {
         guard !touches.isEmpty else { return }
         let tappedLocation = touches.first!.location(in: arView)
         if let tappedEntity = arView.entity(at: tappedLocation) {
-//            let scaleFactor: Float = 1.0
-//            tappedEntity.scale = SIMD3(scaleFactor, scaleFactor, scaleFactor)
+            ARViewModel.shared.userSelectedEntity = tappedEntity
         } else {
-            print("No entity at location: \(tappedLocation)")
+            ARViewModel.shared.userSelectedEntity = nil
         }
     }
 }

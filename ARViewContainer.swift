@@ -12,12 +12,12 @@ import ARKit
 
 struct ARViewContainer : UIViewRepresentable {
     
-    @EnvironmentObject var arVM: ARViewModel
+    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
             
     func makeUIView(context: Context) -> GalleryView {
         
         let arView = ARViewService.shared.arView
-                                
+
         return arView
     }
     

@@ -11,7 +11,7 @@ import ARKit
 
 struct ARViewOverlay: View {
     
-    @EnvironmentObject var arVM: ARViewModel
+    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
     
     @ViewBuilder
     private func arCameraStateView() -> some View {
@@ -56,6 +56,8 @@ struct ARViewOverlay: View {
             VStack {
                 
                 arCameraStateView()
+                
+                Text((arVM.userSelectedEntity != nil) ? "Assigned Entity" : "No Entity")
                 
                 Button {
                     Task {
