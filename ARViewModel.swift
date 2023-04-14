@@ -8,6 +8,22 @@
 import Foundation
 import ARKit
 import RealityKit
+import SwiftUI
+
+enum BottomSheetState {
+    case none, pictureSelection, userSelection
+    
+    func bottomSheetHeight() -> CGFloat {
+        switch (self) {
+            case .none:
+                return 200
+            case .userSelection:
+                return 200
+            default:
+                return 600
+        }
+    }
+}
 
 final class ARViewModel: ObservableObject {
     
@@ -17,7 +33,30 @@ final class ARViewModel: ObservableObject {
     
     @Published var userSelectedEntity: Entity? {
         didSet {
-            print("Changed entity setting")
+            if userSelectedEntity != nil {
+                bottomSheetState = .userSelection
+            } else {
+                bottomSheetState = .none
+            }
+        }
+    }
+    
+    @Published var bottomSheetHeight: CGFloat = 200
+    
+    @Published var bottomSheetState: BottomSheetState = .none {
+        didSet {
+//            if (bottomSheetState != .none) {
+//                Task {
+//                    await ARViewService.shared.arView.session.pause()
+//                }
+//            } else {
+//                Task {
+//                    await ARViewService.shared.arView.session.run(GalleryView.defaultSessionConfig)
+//                }
+//            }
+            withAnimation {
+                bottomSheetHeight = bottomSheetState.bottomSheetHeight()
+            }
         }
     }
     

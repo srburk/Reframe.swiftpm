@@ -12,6 +12,13 @@ import SwiftUI
 
 // MARK: Maybe keep as seperate class for handling certain events?
 class GalleryView: ARView {
+    
+    static var defaultSessionConfig: ARConfiguration {
+        let sessionConfiguration = ARWorldTrackingConfiguration()
+        sessionConfiguration.planeDetection = [.vertical]
+        sessionConfiguration.frameSemantics = .personSegmentationWithDepth
+        return sessionConfiguration
+    }
         
     required init(frame: CGRect) {
         
@@ -28,12 +35,8 @@ class GalleryView: ARView {
         arView.renderOptions = .disableMotionBlur
                 
         arView.scene.anchors.append(mainAnchor)
-                
-        let sessionConfiguration = ARWorldTrackingConfiguration()
-        sessionConfiguration.planeDetection = [.vertical]
-        sessionConfiguration.frameSemantics = .personSegmentationWithDepth
         
-        arView.session.run(sessionConfiguration, options: .resetTracking)
+        arView.session.run(GalleryView.defaultSessionConfig, options: .resetTracking)
         
     }
     

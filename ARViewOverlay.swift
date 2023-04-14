@@ -12,27 +12,61 @@ import ARKit
 struct ARSelectionView: View {
     
     @ViewBuilder
-    private func arEditingButton(systemName: String) -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 15)
-                .stroke(Color.gray)
-                .foregroundColor(.clear)
-            
-            Image(systemName: systemName)
-                .font(.system(size: 35))
-                .foregroundColor(.primary)
+    private func arEditingButton(systemName: String, bottomSheetMode: BottomSheetState) -> some View {
+        
+        Button {
+            ARViewModel.shared.bottomSheetState = bottomSheetMode
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(Color.gray)
+                    .foregroundColor(.clear)
+                
+                Image(systemName: systemName)
+                    .font(.system(size: 35))
+                    .foregroundColor(.primary)
+            }
         }
     }
     
     var body: some View {
         
-        HStack(alignment: .center, spacing: 20) {
-            arEditingButton(systemName: "photo")
-            arEditingButton(systemName: "photo.artframe")
-            arEditingButton(systemName: "square.inset.filled")
+        VStack {
+            HStack(alignment: .center) {
+                
+                Text("Options – \((ARViewModel.shared.userSelectedEntity != nil) ? "Selected" : "N/A")")
+                    .font(.headline)
+                
+                Menu {
+                    Text("Option 1")
+                    Text("Option 2")
+                } label: {
+                    Image(systemName: "chevron.down.circle.fill")
+                        .foregroundColor(.gray)
+                        .symbolRenderingMode(.hierarchical)
+                        .font(.title)
+                }
+
+                Spacer()
+                
+                Button {
+                    ARViewModel.shared.userSelectedEntity = nil
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundColor(.gray)
+                        .font(.title)
+                }
+            }
+            
+            HStack(alignment: .center, spacing: 20) {
+                arEditingButton(systemName: "photo", bottomSheetMode: .pictureSelection)
+                arEditingButton(systemName: "photo.artframe", bottomSheetMode: .pictureSelection)
+                arEditingButton(systemName: "square.inset.filled", bottomSheetMode: .pictureSelection)
+            }
+            
+            Spacer()
         }
-        
-        Spacer()
     }
 }
 
@@ -99,23 +133,20 @@ struct ARViewOverlay: View {
                         
             VStack(alignment: .center) {
                 
-                HStack(alignment: .center) {
-                    Text("4in x 8in")
-                    
-                    Spacer()
-                    
-                    Image(systemName: "xmark.circle.fill")
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundColor(.gray)
-                        .font(.system(size: 30))
+                switch (arVM.bottomSheetState) {
+                    case .none:
+                        EmptyView()
+                    case .pictureSelection:
+                        PictureSelectionView()
+                    case .userSelection:
+                        ARSelectionView()
                 }
-                
-                ARSelectionView()
-                                
             }
             .padding()
             .padding(.bottom, 5)
-            .frame(height: 200)
+            
+            .frame(height: arVM.bottomSheetHeight)
+            
             .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
             
             .background(Color.lightGray, in: RoundedRectangle(cornerRadius: 20))

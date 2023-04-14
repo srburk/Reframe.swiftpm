@@ -52,7 +52,7 @@ final class ImageProcessingService {
             
         workingImage.draw(in: imageRect)
         
-        let newImageData = UIGraphicsGetImageFromCurrentImageContext()!.jpegData(compressionQuality: 0.5)!
+        let newImageData = UIGraphicsGetImageFromCurrentImageContext()!.jpegData(compressionQuality: 0.2)!
         UIGraphicsEndImageContext()
         
         return UIImage(data: newImageData) ?? UIImage()
