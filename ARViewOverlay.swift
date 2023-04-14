@@ -74,23 +74,24 @@ struct ARViewOverlay: View {
     
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
     
-    @ViewBuilder
-    private func arCameraStateView() -> some View {
-        switch(arVM.cameraTrackingState) {
-            case .limited(.excessiveMotion):
-                Text("Excessive Motion")
-            case .limited(.initializing):
-                Text("Initializing")
-            case .limited(.relocalizing):
-                Text("Trying to resume")
-            case .normal:
-                Text("Normal")
-            case .notAvailable:
-                Text("Not Availible")
-            default:
-                Text("Probably too dark")
-        }
-    }
+//    @State private var showARTrackingModeIndicator: Bool = false
+    
+//    private func arCameraState() -> String {
+//        switch(arVM.cameraTrackingState) {
+//            case .limited(.excessiveMotion):
+//                return "Excessive Motion"
+//            case .limited(.initializing):
+//                return "Initializing"
+//            case .limited(.relocalizing):
+//                return "Trying to Resume"
+//            case .normal:
+//                return "Availible"
+//            case .notAvailable:
+//                return "Not Availible"
+//            default:
+//                return "Too Dark"
+//        }
+//    }
     
     @ViewBuilder
     private func capsuleOverlayControls() -> some View {
@@ -119,8 +120,8 @@ struct ARViewOverlay: View {
     }
     
     var body: some View {
-        
-        VStack(alignment: .leading) {
+                
+        VStack(alignment: .center) {
                         
             HStack {
                 Spacer()
@@ -130,6 +131,15 @@ struct ARViewOverlay: View {
             .padding(.trailing, 20)
             
             Spacer()
+            
+//            if (showARTrackingModeIndicator) {
+//                Label(arCameraState(), systemImage: "cube.transparent")
+//                    .font(.system(size: 18))
+//                    .padding([.top, .bottom], 5)
+//                    .padding([.trailing, .leading], 15)
+//                    .background(Color.lightGray, in: Capsule())
+//                    .padding(.bottom, 20)
+//            }
                         
             VStack(alignment: .center) {
                 
@@ -153,6 +163,20 @@ struct ARViewOverlay: View {
             
             .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 28 : 0)
             .padding(.leading, (UIDevice.current.userInterfaceIdiom == .pad) ? 10 : 0)
+            
+            // MARK: Camera state capsule
+//            .onChange(of: arVM.bottomSheetState) { _ in
+//                print(arCameraState())
+//                withAnimation {
+//                    showARTrackingModeIndicator = true
+//                }
+//                Task {
+//                    try await Task.sleep(nanoseconds: 3_000_000_000)
+//                    withAnimation {
+//                        showARTrackingModeIndicator = false
+//                    }
+//                }
+//            }
         }
     }
 }

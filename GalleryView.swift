@@ -13,19 +13,19 @@ import SwiftUI
 // MARK: Maybe keep as seperate class for handling certain events?
 class GalleryView: ARView {
     
-    static var defaultSessionConfig: ARConfiguration {
-        let sessionConfiguration = ARWorldTrackingConfiguration()
-        sessionConfiguration.planeDetection = [.vertical]
-        sessionConfiguration.frameSemantics = .personSegmentationWithDepth
-        return sessionConfiguration
-    }
+//    static var defaultSessionConfig: ARConfiguration {
+//        let sessionConfiguration = ARWorldTrackingConfiguration()
+//        sessionConfiguration.planeDetection = [.vertical]
+//        sessionConfiguration.frameSemantics = .personSegmentationWithDepth
+//        return sessionConfiguration
+//    }
         
     required init(frame: CGRect) {
         
         #if targetEnvironment(simulator)
             super.init(frame: .zero)
         #else
-            super.init(frame: frame, cameraMode: .ar, automaticallyConfigureSession: false)
+            super.init(frame: frame, cameraMode: .ar, automaticallyConfigureSession: true)
         #endif
         
         let mainAnchor = AnchorEntity(.plane(.vertical, classification: .wall, minimumBounds: .zero))
@@ -36,7 +36,7 @@ class GalleryView: ARView {
                 
         arView.scene.anchors.append(mainAnchor)
         
-        arView.session.run(GalleryView.defaultSessionConfig, options: .resetTracking)
+//        arView.session.run(GalleryView., options: .resetTracking)
         
     }
     

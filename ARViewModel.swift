@@ -16,7 +16,7 @@ enum BottomSheetState {
     func bottomSheetHeight() -> CGFloat {
         switch (self) {
             case .none:
-                return 200
+                return 0
             case .userSelection:
                 return 200
             default:
@@ -29,7 +29,7 @@ final class ARViewModel: ObservableObject {
     
     public static var shared = ARViewModel()
     
-    @Published var cameraTrackingState: ARCamera.TrackingState = .notAvailable
+//    @Published var cameraTrackingState: ARCamera.TrackingState = .notAvailable
     
     @Published var userSelectedEntity: Entity? {
         didSet {
@@ -41,7 +41,7 @@ final class ARViewModel: ObservableObject {
         }
     }
     
-    @Published var bottomSheetHeight: CGFloat = 200
+    @Published var bottomSheetHeight: CGFloat = 0
     
     @Published var bottomSheetState: BottomSheetState = .none {
         didSet {

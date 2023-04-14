@@ -33,7 +33,7 @@ final class ImageProcessingService {
             newImageHeight = workingImage.size.width / aspectRatio
         }
 
-        print("The image should be width: \(newImageWidth) and height \(newImageHeight)")
+//        print("The image should be width: \(newImageWidth) and height \(newImageHeight)")
         
         let newImageSize = CGSize(width: newImageWidth, height: newImageHeight)
         
