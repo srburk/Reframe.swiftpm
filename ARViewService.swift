@@ -8,6 +8,7 @@
 import Foundation
 import RealityKit
 import UIKit
+import Combine
 
 @MainActor
 final class ARViewService {
@@ -56,43 +57,47 @@ final class ARViewService {
     
     func newFrame(image: UIImage) async {
         
-        do {
-            let frameURL = Bundle.main.url(forResource: "wood-frame", withExtension: ".usdz")
-            guard let frameURL else { return }
-            
-            let frameEntity = try ModelEntity.loadModel(contentsOf: frameURL)
+        let frameURL = Bundle.main.url(forResource: "wood-frame", withExtension: ".usdz")
+        guard let frameURL else { return }
         
-            guard let frameModel = frameEntity.model else { return }
+//            let frameEntity = try ModelEntity.loadModel(contentsOf: frameURL)
+        
+        var cancellable: AnyCancellable? = nil
+        cancellable = ModelEntity.loadModelAsync(contentsOf: frameURL)
+            .sink(receiveCompletion: { error in
+                print("Error loading frame: \(error)")
+                cancellable?.cancel()
+            }, receiveValue: { frameEntity in
                 
-            let aspectRatio = frameModel.width() / frameModel.height()
+                guard let frameModel = frameEntity.model else { return }
+                    
+                let aspectRatio = frameModel.width() / frameModel.height()
 
-            frameEntity.model = ModelComponent(mesh: frameModel.mesh, materials: [
-                imageMaterial(ImageProcessingService.shared.process(image: image, aspectRatio: CGFloat(aspectRatio)).cgImage!),
-                UnlitMaterial(),
-                frameMaterial()
-            ])
-            
-            if (image.size.width > image.size.height) {
-                let angle = -90 * (Float.pi / 180)
-                let rotationMatrix = float4x4(
-                    [cos(angle), 0, -sin(angle), 0],
-                    [0, 1, 0, 0],
-                    [sin(angle), 0, cos(angle), 0],
-                    [0, 0, 0, 1])
+                frameEntity.model = ModelComponent(mesh: frameModel.mesh, materials: [
+                    self.imageMaterial(ImageProcessingService.shared.process(image: image, aspectRatio: CGFloat(aspectRatio)).cgImage!),
+                    UnlitMaterial(),
+                    self.frameMaterial()
+                ])
                 
-                frameEntity.orientation = simd_quatf(rotationMatrix)
-            }
+                if (image.size.width > image.size.height) {
+                    let angle = -90 * (Float.pi / 180)
+                    let rotationMatrix = float4x4(
+                        [cos(angle), 0, -sin(angle), 0],
+                        [0, 1, 0, 0],
+                        [sin(angle), 0, cos(angle), 0],
+                        [0, 0, 0, 1])
+                    
+                    frameEntity.orientation = simd_quatf(rotationMatrix)
+                }
+                
+                frameEntity.generateCollisionShapes(recursive: true)
             
-            frameEntity.generateCollisionShapes(recursive: true)
-        
-            arView.installGestures([.translation, .scale], for: frameEntity)
-            
-            guard let wallAnchor = arView.scene.anchors.first else { return }
-            wallAnchor.addChild(frameEntity)
-            
-        } catch {
-            print("Failed to load model")
-        }
+                self.arView.installGestures([.translation, .scale], for: frameEntity)
+                
+                guard let wallAnchor = self.arView.scene.anchors.first else { return }
+                wallAnchor.addChild(frameEntity)
+                cancellable?.cancel()
+            })
     }
     
     
