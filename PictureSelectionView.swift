@@ -8,14 +8,6 @@
 import SwiftUI
 import RealityKit
 
-//Image("MonaLisa")
-//    .resizable()
-//    .aspectRatio(contentMode: .fill)
-//    .frame(width: 150, height: 200)
-//    .border(.black)
-////                            .clipShape(RoundedRectangle(cornerRadius: 15))
-//    .padding()
-
 struct PictureSelectionView: View {
     
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
@@ -39,6 +31,7 @@ struct PictureSelectionView: View {
                         .font(.title)
                 }
             }
+            .padding(.trailing)
             
             VStack(alignment: .leading) {
                 Text("Historical")

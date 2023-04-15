@@ -18,6 +18,7 @@ struct ContentView: View {
             ARViewOverlay()
         }
         .edgesIgnoringSafeArea(.all)
+        .prefersPersistentSystemOverlaysHidden()
     }
 }
 

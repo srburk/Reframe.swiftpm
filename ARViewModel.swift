@@ -32,12 +32,9 @@ final class ARViewModel: ObservableObject {
 //    @Published var cameraTrackingState: ARCamera.TrackingState = .notAvailable
     
     @Published var userSelectedEntity: Entity? {
+
         didSet {
-            if userSelectedEntity != nil {
-                bottomSheetState = .userSelection
-            } else {
-                bottomSheetState = .none
-            }
+            bottomSheetState = (userSelectedEntity != nil) ? .userSelection : .none
         }
     }
     
@@ -45,15 +42,6 @@ final class ARViewModel: ObservableObject {
     
     @Published var bottomSheetState: BottomSheetState = .none {
         didSet {
-//            if (bottomSheetState != .none) {
-//                Task {
-//                    await ARViewService.shared.arView.session.pause()
-//                }
-//            } else {
-//                Task {
-//                    await ARViewService.shared.arView.session.run(GalleryView.defaultSessionConfig)
-//                }
-//            }
             withAnimation {
                 bottomSheetHeight = bottomSheetState.bottomSheetHeight()
             }
