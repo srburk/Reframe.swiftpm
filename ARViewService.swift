@@ -35,9 +35,8 @@ final class ARViewService {
     }
     
     func randomFrame() async {
-        let images = ["MonaLisa", "StarryNight", "GirlWithAPearlEarring"]
                 
-        let image = UIImage(named: images.randomElement()!, in: .main, with: .none)!
+        let image = UIImage(named: ContentService.images.randomElement()!, in: .main, with: .none)!
         
         await newFrame(image: image)
     }
@@ -51,7 +50,7 @@ final class ARViewService {
         modelEntity.model = ModelComponent(mesh: frameModel.mesh, materials: [
             imageMaterial(ImageProcessingService.shared.process(image: image, aspectRatio: CGFloat(aspectRatio)).cgImage!),
             UnlitMaterial(),
-            frameMaterial()
+            ContentService.FrameMaterials.simpleMaterial()
         ])
     }
     
@@ -76,7 +75,8 @@ final class ARViewService {
                 frameEntity.model = ModelComponent(mesh: frameModel.mesh, materials: [
                     self.imageMaterial(ImageProcessingService.shared.process(image: image, aspectRatio: CGFloat(aspectRatio)).cgImage!),
                     UnlitMaterial(),
-                    self.frameMaterial()
+                    ContentService.FrameMaterials.simpleMaterial()
+//                    self.frameMaterial()
                 ])
                 
                 if (image.size.width > image.size.height) {
@@ -100,17 +100,15 @@ final class ARViewService {
             })
     }
     
-    
-    
-    private func frameMaterial() -> Material {
-        var frameMaterial = SimpleMaterial()
-        
-        frameMaterial.color = SimpleMaterial.BaseColor(tint: .black)
-        frameMaterial.roughness = 0.5
-        frameMaterial.metallic = 0.0
-        
-        return frameMaterial
-    }
+//    private func frameMaterial() -> Material {
+//        var frameMaterial = SimpleMaterial()
+//
+//        frameMaterial.color = SimpleMaterial.BaseColor(tint: .blue)
+//        frameMaterial.roughness = 0.5
+//        frameMaterial.metallic = 0.0
+//
+//        return frameMaterial
+//    }
     
     private func matteMaterial() -> Material {
         var matteMaterial = SimpleMaterial()

@@ -38,7 +38,7 @@ final class ARViewModel: ObservableObject {
         }
     }
     
-    @Published var bottomSheetHeight: CGFloat = 0
+    @Published private(set) var bottomSheetHeight: CGFloat = 0
     
     @Published var bottomSheetState: BottomSheetState = .none {
         didSet {

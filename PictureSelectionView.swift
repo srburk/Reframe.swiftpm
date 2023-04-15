@@ -38,15 +38,15 @@ struct PictureSelectionView: View {
                     .font(.subheadline)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(0..<5) { _ in
-                            Image("MonaLisa")
+                        ForEach(ContentService.images, id: \.self) { image in
+                            Image(image)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: 100, height: 100)
                                 .clipShape(RoundedRectangle(cornerRadius: 15))
                                 .onTapGesture {
                                     Task {
-                                        await ARViewService.shared.replaceImage(image: UIImage(named: "MonaLisa")!, entity: arVM.userSelectedEntity)
+                                        await ARViewService.shared.replaceImage(image: UIImage(named: image)!, entity: arVM.userSelectedEntity)
                                     }
                                 }
                         }
