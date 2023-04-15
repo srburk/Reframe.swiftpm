@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RealityKit
 
 //Image("MonaLisa")
 //    .resizable()
@@ -16,6 +17,9 @@ import SwiftUI
 //    .padding()
 
 struct PictureSelectionView: View {
+    
+    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
+
     var body: some View {
         VStack(alignment: .center, spacing: 25) {
             
@@ -47,6 +51,11 @@ struct PictureSelectionView: View {
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: 100, height: 100)
                                 .clipShape(RoundedRectangle(cornerRadius: 15))
+                                .onTapGesture {
+                                    Task {
+                                        await ARViewService.shared.replaceImage(image: UIImage(named: "MonaLisa")!, entity: arVM.userSelectedEntity)
+                                    }
+                                }
                         }
                     }
                 }

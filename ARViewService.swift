@@ -33,11 +33,28 @@ final class ARViewService {
         wallAnchor.addChild(indicatorEntity)
     }
     
-    func newFrame() async {
-        
+    func randomFrame() async {
         let images = ["MonaLisa", "StarryNight", "GirlWithAPearlEarring"]
                 
         let image = UIImage(named: images.randomElement()!, in: .main, with: .none)!
+        
+        await newFrame(image: image)
+    }
+    
+    func replaceImage(image: UIImage, entity: Entity?) async {
+        guard let modelEntity = entity as? ModelEntity else { return }
+        guard let frameModel = modelEntity.model else { return }
+        
+        let aspectRatio = frameModel.width() / frameModel.height()
+
+        modelEntity.model = ModelComponent(mesh: frameModel.mesh, materials: [
+            imageMaterial(ImageProcessingService.shared.process(image: image, aspectRatio: CGFloat(aspectRatio)).cgImage!),
+            UnlitMaterial(),
+            frameMaterial()
+        ])
+    }
+    
+    func newFrame(image: UIImage) async {
         
         do {
             let frameURL = Bundle.main.url(forResource: "wood-frame", withExtension: ".usdz")
@@ -76,8 +93,9 @@ final class ARViewService {
         } catch {
             print("Failed to load model")
         }
-        
     }
+    
+    
     
     private func frameMaterial() -> Material {
         var frameMaterial = SimpleMaterial()

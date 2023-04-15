@@ -107,7 +107,7 @@ struct ARViewOverlay: View {
                         
             Button {
                 Task {
-                    await ARViewService.shared.newFrame()
+                    await ARViewService.shared.randomFrame()
                 }
             } label: {
                 Image(systemName: "plus")
