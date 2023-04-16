@@ -87,7 +87,9 @@ struct ARViewOverlay: View {
             Menu {
                 
                 Button(role: .destructive) {
-                    // delete
+                    Task {
+                        await ARViewService.shared.deleteEntity()
+                    }
                 } label: {
                     Label("Delete", systemImage: "trash")
                 }

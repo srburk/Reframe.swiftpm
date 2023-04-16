@@ -24,14 +24,11 @@ final class ARViewService {
         }
     }
     
-    func showAnchorIndicator() async {
-        guard let wallAnchor = arView.scene.anchors.first else { return }
-        
-        let indicatorMaterial = UnlitMaterial(color: .blue)
-        let indicatorEntity = ModelEntity(mesh: .generateBox(size: 0.05), materials: [indicatorMaterial])
-        indicatorEntity.position = SIMD3(0.0, 0.0, 0.0)
-        
-        wallAnchor.addChild(indicatorEntity)
+    func deleteEntity() async {
+        guard let wallAnchor = self.arView.scene.anchors.first else { return }
+        guard let selectedEntity = ARViewModel.shared.userSelectedEntity else { return }
+        wallAnchor.removeChild(selectedEntity)
+        ARViewModel.shared.userSelectedEntity = nil
     }
     
     func randomFrame() async {
