@@ -12,40 +12,37 @@ import PhotosUI
 struct ImagePickerView: UIViewControllerRepresentable {
     
     @Binding var image: UIImage?
-     
-    func makeUIViewController(context: Context) -> some PHPickerViewController {
-        var config = PHPickerConfiguration()
-        config.filter = .images
-        let picker = PHPickerViewController(configuration: config)
-        picker.delegate = context.coordinator
-        return picker
+    @Environment(\.presentationMode) var isPresented
+    var sourceType: UIImagePickerController.SourceType
+        
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = self.sourceType
+        imagePicker.delegate = context.coordinator // confirming the delegate
+        return imagePicker
     }
-    
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-        //
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {
+
     }
-    
+
+    // Connecting the Coordinator class with this struct
     func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+        return Coordinator(picker: self)
     }
     
-    class Coordinator: NSObject, PHPickerViewControllerDelegate {
-        let parent: ImagePickerView
-
-        init(_ parent: ImagePickerView) {
-            self.parent = parent
+    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        var picker: ImagePickerView
+        
+        init(picker: ImagePickerView) {
+            self.picker = picker
         }
-
-        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-            picker.dismiss(animated: true)
-
-            guard let provider = results.first?.itemProvider else { return }
-
-            if provider.canLoadObject(ofClass: UIImage.self) {
-                provider.loadObject(ofClass: UIImage.self) { image, _ in
-                    self.parent.image = image as? UIImage
-                }
-            }
+        
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            guard let selectedImage = info[.originalImage] as? UIImage else { return }
+            self.picker.image = selectedImage
+            self.picker.isPresented.wrappedValue.dismiss()
         }
+        
     }
 }

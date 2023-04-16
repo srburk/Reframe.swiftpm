@@ -13,6 +13,8 @@ struct PictureSelectionView: View {
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
     
     @State private var showingImagePickerView = false
+    @State private var showingCameraPickerView = false
+
     @State private var inputImage: UIImage?
     
     private func loadCustomImage() {
@@ -93,7 +95,7 @@ struct PictureSelectionView: View {
                     }
                     
                     Button {
-                        showingImagePickerView = true
+                        showingCameraPickerView = true
                     } label: {
                         Label("Take Photo", systemImage: "camera")
                     }
@@ -122,8 +124,13 @@ struct PictureSelectionView: View {
         }
         
         .sheet(isPresented: $showingImagePickerView) {
-            ImagePickerView(image: $inputImage)
+            ImagePickerView(image: $inputImage, sourceType: .photoLibrary)
         }
+        
+        .fullScreenCover(isPresented: $showingCameraPickerView, content: {
+            ImagePickerView(image: $inputImage, sourceType: .camera)
+                .ignoresSafeArea(.all)
+        })
         
         .onChange(of: inputImage) { _ in
             loadCustomImage()
