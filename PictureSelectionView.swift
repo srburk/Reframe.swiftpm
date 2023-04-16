@@ -89,12 +89,6 @@ struct PictureSelectionView: View {
                 Menu {
                     
                     Button {
-                        showingImagePickerView = true
-                    } label: {
-                        Label("Choose File", systemImage: "folder")
-                    }
-                    
-                    Button {
                         showingCameraPickerView = true
                     } label: {
                         Label("Take Photo", systemImage: "camera")
