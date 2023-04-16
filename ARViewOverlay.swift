@@ -32,60 +32,76 @@ struct ARViewOverlay: View {
 //        }
 //    }
     
-    @ViewBuilder
-    private func boxedControl(icon: String, action: @escaping () -> Void) -> some View {
-        Button {
-            action()
-        } label: {
-            Image(systemName: icon)
-                .foregroundColor(.gray)
-                .font(.system(size: 20, weight: .medium))
-                .frame(width: 55, height: 40)
-                .background(Color.buttonGray, in: RoundedRectangle(cornerRadius: 8))
+    struct OverlayBarView<Content: View>: View {
+        @ViewBuilder var content: Content
+        
+        var body: some View {
+            HStack(spacing: 10) {
+                content
+            }
+            .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
+            .frame(height: 80)
+            .background(Color.lightGray, in: RoundedRectangle(cornerRadius: 15))
+            .padding()
+            .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 75 : 125 )
         }
-        .buttonStyle(.plain)
+    }
+    
+    @ViewBuilder
+    private func boxedControl(icon: String, description: String, action: @escaping () -> Void) -> some View {
+        VStack(spacing: 5) {
+            Button {
+                action()
+            } label: {
+                Image(systemName: icon)
+                    .foregroundColor(.gray)
+                    .font(.system(size: 20, weight: .medium))
+                    .frame(width: 55, height: 40)
+                    .background(Color.buttonGray, in: RoundedRectangle(cornerRadius: 8))
+            }
+            .buttonStyle(.plain)
+            
+            Text(description)
+                .foregroundColor(.gray)
+                .font(.system(size: 12))
+        }
+        .padding(.top, 5)
     }
     
     @ViewBuilder
     private func barOverlayControls() -> some View {
-        HStack(spacing: 10) {
-            boxedControl(icon: "plus") {
+        OverlayBarView {
+            boxedControl(icon: "plus", description: "New") {
                 Task {
                     await ARViewService.shared.randomFrame()
                 }
             }
             .padding(.leading)
-            boxedControl(icon: "camera") {
+            boxedControl(icon: "camera", description: "Capture") {
                 ARViewService.shared.captureScreen()
             }
             Spacer()
         }
-        .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
-        .frame(height: 65)
-        .background(Color.lightGray, in: RoundedRectangle(cornerRadius: 15))
-        .padding()
-        .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 50 : 100 )
     }
     
     @ViewBuilder
     private func selectedPictureOverlayControls() -> some View {
-        HStack(spacing: 10) {
-            
-            boxedControl(icon: "photo") {
+        OverlayBarView {
+
+            boxedControl(icon: "photo", description: "Image") {
                 arVM.bottomSheetState = .pictureSelection
             }
             .padding(.leading)
             
-            boxedControl(icon: "rectangle.dashed") {
+            boxedControl(icon: "rectangle.dashed", description: "Frame") {
                 arVM.bottomSheetState = .pictureSelection
             }
             
-            boxedControl(icon: "paintbrush") {
+            boxedControl(icon: "paintbrush", description: "Matte") {
                 arVM.bottomSheetState = .pictureSelection
             }
             
             Menu {
-                
                 Button(role: .destructive) {
                     Task {
                         await ARViewService.shared.deleteEntity()
@@ -95,13 +111,20 @@ struct ARViewOverlay: View {
                 }
 
             } label: {
-                Image(systemName: "gearshape")
-                    .foregroundColor(.gray)
-                    .font(.system(size: 20, weight: .medium))
-                    .frame(width: 55, height: 40)
-                    .background(Color.buttonGray, in: RoundedRectangle(cornerRadius: 8))
+                VStack(spacing: 5) {
+                    Image(systemName: "gearshape")
+                        .foregroundColor(.gray)
+                        .font(.system(size: 20, weight: .medium))
+                        .frame(width: 55, height: 40)
+                        .background(Color.buttonGray, in: RoundedRectangle(cornerRadius: 8))
+                    Text("Options")
+                        .foregroundColor(.gray)
+                        .font(.system(size: 12))
+                }
+//                .padding(.bottom, 15)
             }
-            .buttonStyle(.plain)
+            .menuStyle(.borderlessButton)
+            .padding(.top, 5)
             
             Spacer()
             
@@ -115,11 +138,6 @@ struct ARViewOverlay: View {
             }
             .padding(.trailing)
         }
-        .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
-        .frame(height: 65)
-        .background(Color.lightGray, in: RoundedRectangle(cornerRadius: 15))
-        .padding()
-        .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 50 : 100 )
     }
     
     var body: some View {
