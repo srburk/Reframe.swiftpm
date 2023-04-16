@@ -9,6 +9,7 @@ import Foundation
 import ARKit
 import RealityKit
 import SwiftUI
+import PhotosUI
 
 enum BottomSheetState {
     case none, pictureSelection, userSelection
@@ -47,5 +48,4 @@ final class ARViewModel: ObservableObject {
             }
         }
     }
-    
 }

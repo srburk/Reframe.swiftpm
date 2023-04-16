@@ -11,8 +11,19 @@ import RealityKit
 struct PictureSelectionView: View {
     
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
+    
+    @State private var showingImagePickerView = false
+    @State private var inputImage: UIImage?
+    
+    private func loadCustomImage() {
+        guard let inputImage else { return }
+        Task {
+            await ARViewService.shared.replaceImage(image: inputImage, entity: arVM.userSelectedEntity)
+        }
+    }
 
     var body: some View {
+        
         VStack(alignment: .center, spacing: 25) {
             
             HStack(alignment: .center) {
@@ -73,18 +84,49 @@ struct PictureSelectionView: View {
             VStack(alignment: .leading) {
                 Text("Custom")
                     .font(.subheadline)
-                HStack {
-                   Image(systemName: "plus")
-                    .font(.system(size: 25))
-                    .frame(width: 100, height: 100)
-                    .background(.ultraThickMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                        
-                    Spacer()
+                Menu {
+                    
+                    Button {
+                        showingImagePickerView = true
+                    } label: {
+                        Label("Choose File", systemImage: "folder")
+                    }
+                    
+                    Button {
+                        showingImagePickerView = true
+                    } label: {
+                        Label("Take Photo", systemImage: "camera")
+                    }
+                    
+                    Button {
+                        showingImagePickerView = true
+                    } label: {
+                        Label("Photo Library", systemImage: "photo.on.rectangle")
+                    }
+
+                } label: {
+                    HStack {
+                       Image(systemName: "plus")
+                        .font(.system(size: 25))
+                        .frame(width: 100, height: 100)
+                        .background(.ultraThickMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                            
+                        Spacer()
+                    }
                 }
+                .buttonStyle(.plain)
             }
             
             Spacer()
+        }
+        
+        .sheet(isPresented: $showingImagePickerView) {
+            ImagePickerView(image: $inputImage)
+        }
+        
+        .onChange(of: inputImage) { _ in
+            loadCustomImage()
         }
     }
 }
