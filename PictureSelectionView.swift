@@ -16,7 +16,7 @@ struct PictureSelectionView: View {
     @State private var showingCameraPickerView = false
 
     @State private var inputImage: UIImage?
-    
+        
     private func loadCustomImage() {
         guard let inputImage else { return }
         Task {
@@ -26,17 +26,17 @@ struct PictureSelectionView: View {
 
     var body: some View {
         
-        VStack(alignment: .center, spacing: 25) {
+        VStack(alignment: .center, spacing: 20) {
             
             HStack(alignment: .center) {
                 
                 Text("Image Selection")
-                    .font(.headline)
+                    .font(.system(size: 20, weight: .bold))
 
                 Spacer()
                 
                 Button {
-                    ARViewModel.shared.userSelectedEntity = nil
+                    arVM.bottomSheetState = .userSelection
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .symbolRenderingMode(.hierarchical)
@@ -48,7 +48,8 @@ struct PictureSelectionView: View {
             
             VStack(alignment: .leading) {
                 Text("Historical")
-                    .font(.subheadline)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.gray)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(ContentService.images, id: \.self) { image in
@@ -69,7 +70,8 @@ struct PictureSelectionView: View {
             
             VStack(alignment: .leading) {
                 Text("Abstract")
-                    .font(.subheadline)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.gray)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(0..<5) { _ in
@@ -85,7 +87,8 @@ struct PictureSelectionView: View {
             
             VStack(alignment: .leading) {
                 Text("Custom")
-                    .font(.subheadline)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.gray)
                 Menu {
                     
                     Button {
@@ -113,21 +116,39 @@ struct PictureSelectionView: View {
                 }
                 .buttonStyle(.plain)
             }
-            
-            Spacer()
+                        
+            Button {
+                // generate
+            } label: {
+                HStack {
+                    Spacer()
+                    Text("Apply")
+                        .foregroundColor(.white)
+                    Spacer()
+                }
+                .frame(width: .infinity, height: 50)
+                .background(.blue, in: RoundedRectangle(cornerRadius: 15))
+            }
+            .buttonStyle(.plain)
+            .padding(.trailing)
         }
         
+        .padding(.leading)
+        
+        Spacer()
+        
         .sheet(isPresented: $showingImagePickerView) {
-            ImagePickerView(image: $inputImage, sourceType: .photoLibrary)
+            ImagePickerComponent(image: $inputImage, sourceType: .photoLibrary)
         }
         
         .fullScreenCover(isPresented: $showingCameraPickerView, content: {
-            ImagePickerView(image: $inputImage, sourceType: .camera)
+            ImagePickerComponent(image: $inputImage, sourceType: .camera)
                 .ignoresSafeArea(.all)
         })
         
         .onChange(of: inputImage) { _ in
             loadCustomImage()
+            
         }
     }
 }

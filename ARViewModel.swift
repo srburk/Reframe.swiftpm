@@ -19,7 +19,7 @@ enum BottomSheetState {
             case .none:
                 return 0
             case .userSelection:
-                return 200
+                return 0
             default:
                 return 600
         }

@@ -33,65 +33,111 @@ struct ARViewOverlay: View {
 //    }
     
     @ViewBuilder
-    private func capsuleOverlayControls() -> some View {
-        VStack(alignment: .center, spacing: 15) {
-            Button {
-                ARViewService.shared.captureScreen()
-            } label: {
-                Image(systemName: "camera.shutter.button")
-                    .foregroundColor(.black)
-            }
-            
-            Divider()
-                        
-            Button {
+    private func boxedControl(icon: String, action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            Image(systemName: icon)
+                .foregroundColor(.gray)
+                .font(.system(size: 20, weight: .medium))
+                .frame(width: 55, height: 40)
+                .background(Color.buttonGray, in: RoundedRectangle(cornerRadius: 8))
+        }
+        .buttonStyle(.plain)
+    }
+    
+    @ViewBuilder
+    private func barOverlayControls() -> some View {
+        HStack(spacing: 10) {
+            boxedControl(icon: "plus") {
                 Task {
                     await ARViewService.shared.randomFrame()
                 }
-            } label: {
-                Image(systemName: "plus")
-                    .foregroundColor(.black)
             }
-
+            .padding(.leading)
+            boxedControl(icon: "camera") {
+                ARViewService.shared.captureScreen()
+            }
+            Spacer()
         }
-        .frame(width: 40, height: 100)
-        .background(Color.lightGray, in: RoundedRectangle(cornerRadius: 20))
+        .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
+        .frame(height: 65)
+        .background(Color.lightGray, in: RoundedRectangle(cornerRadius: 15))
+        .padding()
+        .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 50 : 100 )
+    }
+    
+    @ViewBuilder
+    private func selectedPictureOverlayControls() -> some View {
+        HStack(spacing: 10) {
+            
+            boxedControl(icon: "photo") {
+                arVM.bottomSheetState = .pictureSelection
+            }
+            .padding(.leading)
+            
+            boxedControl(icon: "rectangle.dashed") {
+                arVM.bottomSheetState = .pictureSelection
+            }
+            
+            boxedControl(icon: "paintbrush") {
+                arVM.bottomSheetState = .pictureSelection
+            }
+            
+            Menu {
+                
+                Button(role: .destructive) {
+                    // delete
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+
+            } label: {
+                Image(systemName: "gearshape")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 20, weight: .medium))
+                    .frame(width: 55, height: 40)
+                    .background(Color.buttonGray, in: RoundedRectangle(cornerRadius: 8))
+            }
+            .buttonStyle(.plain)
+            
+            Spacer()
+            
+            Button {
+                ARViewModel.shared.userSelectedEntity = nil
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundColor(.gray)
+                    .font(.title)
+            }
+            .padding(.trailing)
+        }
+        .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
+        .frame(height: 65)
+        .background(Color.lightGray, in: RoundedRectangle(cornerRadius: 15))
+        .padding()
+        .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 50 : 100 )
     }
     
     var body: some View {
                 
-        VStack(alignment: .center) {
-                        
-            HStack {
-                Spacer()
-                capsuleOverlayControls()
-            }
-            .padding(.top, 50)
-            .padding(.trailing, 20)
+        VStack(alignment: .leading) {
             
             Spacer()
-            
-//            if (showARTrackingModeIndicator) {
-//                Label(arCameraState(), systemImage: "cube.transparent")
-//                    .font(.system(size: 18))
-//                    .padding([.top, .bottom], 5)
-//                    .padding([.trailing, .leading], 15)
-//                    .background(Color.lightGray, in: Capsule())
-//                    .padding(.bottom, 20)
-//            }
                         
-            VStack(alignment: .center) {
+            VStack(alignment: .leading) {
                 
                 switch (arVM.bottomSheetState) {
                     case .none:
-                        EmptyView()
+                        barOverlayControls()
                     case .pictureSelection:
                         PictureSelectionView()
                     case .userSelection:
-                        FrameEditingView()
+                        selectedPictureOverlayControls()
                 }
             }
-            .padding([.top, .leading])
+            .padding([.top])
             .padding(.bottom, 20)
             
             .frame(height: arVM.bottomSheetHeight)
@@ -121,7 +167,7 @@ struct ARViewOverlay_Previews: PreviewProvider {
             Color.cyan
             ARViewOverlay()
         }
-        .edgesIgnoringSafeArea(.all)
+        .edgesIgnoringSafeArea([.top, .bottom])
         .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (6th generation)"))
         .previewDisplayName("iPad Pro 12.9-inch")
     }

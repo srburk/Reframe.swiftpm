@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import PhotosUI
 
-struct ImagePickerView: UIViewControllerRepresentable {
+struct ImagePickerComponent: UIViewControllerRepresentable {
     
     @Binding var image: UIImage?
     @Environment(\.presentationMode) var isPresented
@@ -32,9 +32,9 @@ struct ImagePickerView: UIViewControllerRepresentable {
     }
     
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-        var picker: ImagePickerView
+        var picker: ImagePickerComponent
         
-        init(picker: ImagePickerView) {
+        init(picker: ImagePickerComponent) {
             self.picker = picker
         }
         
