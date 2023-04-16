@@ -16,6 +16,15 @@ final class ContentService {
         "GirlWithAPearlEarring"
     ]
     
+    // MARK: Display name : Internal Name
+    static var frames: [String: String] = [
+        "Wood": "wood-frame"
+    ]
+    
+    static var frameMaterials = [
+        SimpleMaterial(color: .black, isMetallic: false)
+    ]
+    
     struct FrameMaterials {
         static func simpleMaterial() -> Material {
             return SimpleMaterial(color: .black, isMetallic: false)

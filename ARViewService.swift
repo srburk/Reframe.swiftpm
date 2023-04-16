@@ -89,7 +89,7 @@ final class ARViewService {
                 
                 frameEntity.generateCollisionShapes(recursive: true)
             
-                self.arView.installGestures([.translation, .scale], for: frameEntity)
+                self.arView.installGestures([.translation, .scale, .rotation], for: frameEntity)
                 
                 guard let wallAnchor = self.arView.scene.anchors.first else { return }
                 wallAnchor.addChild(frameEntity)
