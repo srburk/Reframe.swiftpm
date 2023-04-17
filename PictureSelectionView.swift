@@ -19,9 +19,9 @@ struct PictureSelectionView: View {
         
     private func loadCustomImage() {
         guard let inputImage else { return }
-        Task {
-            await ARViewService.shared.replaceImage(image: inputImage, entity: arVM.userSelectedEntity)
-        }
+//        Task {
+//            await ARViewService.shared.replaceImage(image: inputImage, entity: arVM.userSelectedEntity)
+//        }
     }
 
     var body: some View {
@@ -59,9 +59,9 @@ struct PictureSelectionView: View {
                                 .frame(width: 100, height: 100)
                                 .clipShape(RoundedRectangle(cornerRadius: 15))
                                 .onTapGesture {
-                                    Task {
-                                        await ARViewService.shared.replaceImage(image: UIImage(named: image)!, entity: arVM.userSelectedEntity)
-                                    }
+//                                    Task {
+//                                        await ARViewService.shared.replaceImage(image: UIImage(named: image)!, entity: arVM.userSelectedEntity)
+//                                    }
                                 }
                         }
                     }
@@ -123,9 +123,9 @@ struct PictureSelectionView: View {
                             .frame(width: 100, height: 100)
                             .clipShape(RoundedRectangle(cornerRadius: 15))
                             .onTapGesture {
-                                Task {
-                                    await ARViewService.shared.replaceImage(image: UIImage(contentsOfFile: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\(imageName).png").absoluteString)!, entity: arVM.userSelectedEntity)
-                                }
+//                                Task {
+//                                    await ARViewService.shared.replaceImage(image: UIImage(contentsOfFile: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\(imageName).png").absoluteString)!, entity: arVM.userSelectedEntity)
+//                                }
                             }
                     }
                     

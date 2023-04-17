@@ -32,11 +32,13 @@ final class ARViewModel: ObservableObject {
     
     @Published var cameraTrackingState: ARCamera.TrackingState = .notAvailable
     
-    @Published var userSelectedEntity: Entity? {
+    @Published var userSelectedObject: VirtualGallery.GalleryObject? {
         didSet {
-            bottomSheetState = (userSelectedEntity != nil) ? .userSelection : .none
+            bottomSheetState = (userSelectedObject != nil) ? .userSelection : .none
         }
     }
+    
+    @Published var loadingNewObject: Bool = false
     
     @Published private(set) var bottomSheetHeight: CGFloat = 0
     

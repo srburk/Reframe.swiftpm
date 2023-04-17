@@ -51,9 +51,9 @@ class GalleryView: ARView {
         guard !touches.isEmpty else { return }
         let tappedLocation = touches.first!.location(in: arView)
         if let tappedEntity = arView.entity(at: tappedLocation) {
-            ARViewModel.shared.userSelectedEntity = tappedEntity
+            ARViewModel.shared.userSelectedObject = VirtualGallery.shared.collection.first(where: { $0.id.uuidString == tappedEntity.name })
         } else {
-            ARViewModel.shared.userSelectedEntity = nil
+            ARViewModel.shared.userSelectedObject = nil
         }
     }
 }

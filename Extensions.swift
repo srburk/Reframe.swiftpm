@@ -10,11 +10,11 @@ import SwiftUI
 import ARKit
 
 extension ModelComponent {
-    func width() -> Float {
-        return self.mesh.bounds.max.x - self.mesh.bounds.min.x
+    func width() -> CGFloat {
+        return CGFloat(self.mesh.bounds.max.x - self.mesh.bounds.min.x)
     }
-    func height() -> Float {
-        return self.mesh.bounds.max.z - self.mesh.bounds.min.z
+    func height() -> CGFloat {
+        return CGFloat(self.mesh.bounds.max.z - self.mesh.bounds.min.z)
     }
 }
 

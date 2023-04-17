@@ -73,8 +73,17 @@ struct ARViewOverlay: View {
         OverlayBarView {
             boxedControl(icon: "plus", description: "New") {
 //                arVM.bottomSheetState = .newFrame
+//                Task {
+//                    await ARViewService.shared.randomFrame()
+//                }
                 Task {
-                    await ARViewService.shared.randomFrame()
+                    
+                    if let image = UIImage(named: ContentService.images.historical.randomElement() ?? "") {
+                        if let frameURL = Bundle.main.url(forResource: "wood-frame", withExtension: ".usdz") {
+                            let newObject = VirtualGallery.GalleryObject(image: image, frameURL: frameURL, matteSize: 0.8)
+                            await VirtualGallery.shared.addObject(newObject)
+                        }
+                    }
                 }
             }
             .padding(.leading)
@@ -85,7 +94,7 @@ struct ARViewOverlay: View {
             Spacer()
             
             boxedControl(icon: "person.2.fill", description: "Connect") {
-                ARViewService.shared.captureScreen()
+                VirtualGallery.shared.debugReport()
             }
             .padding(.trailing)
         }
@@ -107,7 +116,10 @@ struct ARViewOverlay: View {
             Menu {
                 Button(role: .destructive) {
                     Task {
-                        await ARViewService.shared.deleteEntity()
+//                        await ARViewService.shared.deleteEntity()
+                        if let selectedEntity = arVM.userSelectedObject {
+                            VirtualGallery.shared.removeObject(selectedEntity)
+                        }
                     }
                 } label: {
                     Label("Delete", systemImage: "trash")
@@ -201,6 +213,12 @@ struct ARViewOverlay: View {
             
             .padding(.bottom, (UIDevice.current.userInterfaceIdiom == .pad) ? 28 : 0)
             .padding(.leading, (UIDevice.current.userInterfaceIdiom == .pad) ? 10 : 0)
+        }
+        
+        .overlay {
+            if (arVM.loadingNewObject) {
+                ProgressView()
+            }
         }
     }
 }
