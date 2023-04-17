@@ -29,7 +29,7 @@ struct PictureSelectionView: View {
         VStack(alignment: .center, spacing: 20) {
             
             HStack(alignment: .center) {
-                
+
                 Text("Image")
                     .font(.system(size: 20, weight: .bold))
 
@@ -132,21 +132,6 @@ struct PictureSelectionView: View {
                     Spacer()
                 }
             }
-                        
-            Button {
-                // generate
-            } label: {
-                HStack {
-                    Spacer()
-                    Text("Apply")
-                        .foregroundColor(.white)
-                    Spacer()
-                }
-                .frame(width: .infinity, height: 50)
-                .background(.blue, in: RoundedRectangle(cornerRadius: 15))
-            }
-            .buttonStyle(.plain)
-            .padding(.trailing)
         }
         
         .padding(.leading)

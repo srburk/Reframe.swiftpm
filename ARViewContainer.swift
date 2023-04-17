@@ -78,30 +78,32 @@ struct ARViewContainer : UIViewRepresentable {
             ARViewModel.shared.cameraTrackingState = camera.trackingState
         }
         
-        func session(_ session: ARSession, didUpdate frame: ARFrame) {
+//        func session(_ session: ARSession, didUpdate frame: ARFrame) {
 //            guard let selectedEntity = ARViewModel.shared.userSelectedEntity else { return }
 //            sizeLabelPosition = selectedEntity.position(relativeTo: nil)
-        }
+//        }
     }
     
 //    private func postProcessCallback(context: ARView.PostProcessContext) {
 //
-//        if let ciImage = CIImage(mtlTexture: context.sourceColorTexture) {
+//        if var ciImage = CIImage(mtlTexture: context.sourceColorTexture) {
 //
-//            let ciContext = CIContext(mtlDevice: context.device)
+//            if let selectedEntity = ARViewModel.shared.userSelectedEntity {
 //
-//            let imageSize = CGSize(width: 100, height: 100)
+//                let ciContext = CIContext(mtlDevice: context.device)
+//                let testImage = CIImage(color: .white)
 //
-//            let color = CIColor(red: 1, green: 1, blue: 1, alpha: 1)
-//            let whiteImage = CIImage(color: color).cropped(to: CGRect(origin: .zero, size: imageSize))
+//                ciImage = testImage.composited(over: ciImage)
 //
-//            let compositeFilter = CIFilter(name: "CISourceOverCompositing")
-//            compositeFilter?.setValue(whiteImage, forKey: kCIInputImageKey)
-//            compositeFilter?.setValue(ciImage, forKey: kCIInputBackgroundImageKey)
+//                ciContext.render(ciImage, to: context.targetColorTexture, commandBuffer: context.commandBuffer, bounds: CGRect(x: 0, y: 0, width: Int(ciImage.extent.width), height: Int(ciImage.extent.height)), colorSpace: ciImage.colorSpace ?? CGColorSpaceCreateDeviceRGB())
 //
-//            if let finalCIImage = compositeFilter?.outputImage {
-//                ciContext.render(finalCIImage, to: context.targetColorTexture, commandBuffer: context.commandBuffer, bounds: CGRect(x: 0, y: 0, width: Int(ciImage.extent.width), height: Int(ciImage.extent.height)), colorSpace: finalCIImage.colorSpace ?? CGColorSpaceCreateDeviceRGB())
+//                return
 //            }
+//
+//
+//            let cmdEncoder = context.commandBuffer.makeBlitCommandEncoder()
+//            cmdEncoder?.copy(from: context.sourceColorTexture, to: context.targetColorTexture)
+//            cmdEncoder?.endEncoding()
 //        }
 //    }
 }

@@ -72,6 +72,7 @@ struct ARViewOverlay: View {
     private func barOverlayControls() -> some View {
         OverlayBarView {
             boxedControl(icon: "plus", description: "New") {
+//                arVM.bottomSheetState = .newFrame
                 Task {
                     await ARViewService.shared.randomFrame()
                 }
@@ -111,7 +112,7 @@ struct ARViewOverlay: View {
                 } label: {
                     Label("Delete", systemImage: "trash")
                 }
-
+                
             } label: {
                 VStack(spacing: 5) {
                     Image(systemName: "gearshape.fill")
@@ -173,7 +174,7 @@ struct ARViewOverlay: View {
             }
             
             Spacer()
-                        
+                   
             VStack(alignment: .leading) {
                 
                 switch (arVM.bottomSheetState) {
@@ -185,6 +186,8 @@ struct ARViewOverlay: View {
                         FrameSelectionView()
                     case .userSelection:
                         selectedPictureOverlayControls()
+                    case .newFrame:
+                        NewFrameView()
                 }
             }
             .padding([.top])

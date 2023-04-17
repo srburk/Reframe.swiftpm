@@ -78,34 +78,16 @@ struct FrameSelectionView: View {
             
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Matte Size")
+                    Text("Matte")
                         .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.gray)
                     Spacer()
                 }
-                
                 Slider(value: $mattePercentage, in: 0...10)
-                
             }
             .padding(.trailing)
             
             Spacer()
-            
-            Button {
-                // generate
-            } label: {
-                HStack {
-                    Spacer()
-                    Text("Apply")
-                        .foregroundColor(.white)
-                    Spacer()
-                }
-                .frame(width: .infinity, height: 50)
-                .background(.blue, in: RoundedRectangle(cornerRadius: 15))
-            }
-            .buttonStyle(.plain)
-            .padding(.trailing)
-            .padding(.bottom, 25)
         }
         .padding([.leading])
     }
