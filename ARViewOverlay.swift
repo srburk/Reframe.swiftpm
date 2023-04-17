@@ -13,24 +13,24 @@ struct ARViewOverlay: View {
     
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
     
-//    @State private var showARTrackingModeIndicator: Bool = false
+    @State private var showARTrackingModeIndicator: Bool = false
     
-//    private func arCameraState() -> String {
-//        switch(arVM.cameraTrackingState) {
-//            case .limited(.excessiveMotion):
-//                return "Excessive Motion"
-//            case .limited(.initializing):
-//                return "Initializing"
-//            case .limited(.relocalizing):
-//                return "Trying to Resume"
-//            case .normal:
-//                return "Availible"
-//            case .notAvailable:
-//                return "Not Availible"
-//            default:
-//                return "Too Dark"
-//        }
-//    }
+    private func arCameraState() -> String {
+        switch(arVM.cameraTrackingState) {
+            case .limited(.excessiveMotion):
+                return "Excessive Motion"
+            case .limited(.initializing):
+                return "Initializing"
+            case .limited(.relocalizing):
+                return "Trying to Resume"
+            case .normal:
+                return "Availible"
+            case .notAvailable:
+                return "Not Availible"
+            default:
+                return "Too Dark"
+        }
+    }
     
     struct OverlayBarView<Content: View>: View {
         @ViewBuilder var content: Content
@@ -123,7 +123,6 @@ struct ARViewOverlay: View {
                         .foregroundColor(.gray)
                         .font(.system(size: 12))
                 }
-//                .padding(.bottom, 15)
             }
             .menuStyle(.borderlessButton)
             .padding(.top, 5)
@@ -141,13 +140,39 @@ struct ARViewOverlay: View {
                 
         VStack(alignment: .leading) {
             
-            Spacer()
-            
             HStack {
+
                 Spacer()
-                EmptyView()
+                if (showARTrackingModeIndicator) {
+                    Label(arCameraState(), systemImage: "cube.transparent")
+                        .font(.system(size: 18))
+                        .padding([.top, .bottom], 5)
+                        .padding([.trailing, .leading], 15)
+                        .background(Color.lightGray, in: Capsule())
+                }
                 Spacer()
             }
+            .padding(.top, 55)
+            
+             // MARK: Camera state capsule
+            if #available(iOS 16.0, *) {
+                EmptyView()
+                .onChange(of: arVM.cameraTrackingState) { _ in
+                    withAnimation {
+                        showARTrackingModeIndicator = true
+                    }
+                    Task {
+                        try await Task.sleep(nanoseconds: 4_000_000_000)
+                        withAnimation {
+                            showARTrackingModeIndicator = false
+                        }
+                    }
+                }
+            } else {
+                // Fallback on earlier versions
+            }
+            
+            Spacer()
                         
             VStack(alignment: .leading) {
                 

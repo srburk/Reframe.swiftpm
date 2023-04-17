@@ -11,30 +11,29 @@ import RealityKit
 import ARKit
 
 struct ARViewContainer : UIViewRepresentable {
-    
-//    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
-            
+                
     func makeUIView(context: Context) -> GalleryView {
         
         let arView = ARViewService.shared.arView
         
-//        let arTrackingStateTimer = Timer(timeInterval: 10, repeats: true) { timer in
-//            print("Fired!")
-//        }
-//
-//        RunLoop.main.add(arTrackingStateTimer, forMode: .common)
-        
-//        DispatchQueue.global(qos: .background).async {
-//            print("Check")
-////            arView.arView.session.currentFrame?.camera.trackingState ?? .notAvailable
-//        }
+        arView.session.delegate = context.coordinator
 
         return arView
     }
     
+    func makeCoordinator() -> Coordinator {
+        return Coordinator()
+    }
+    
     func updateUIView(_ uiView: GalleryView, context: Context) {
-//        DispatchQueue.main.async {
-//            arVM.cameraTrackingState = uiView.arView.session.currentFrame?.camera.trackingState ?? .notAvailable
-//        }
+
+    }
+    
+    class Coordinator: NSObject, ARSessionDelegate {
+        
+        func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+            ARViewModel.shared.cameraTrackingState = camera.trackingState
+        }
+        
     }
 }

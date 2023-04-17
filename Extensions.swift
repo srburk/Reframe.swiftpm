@@ -7,7 +7,7 @@
 
 import RealityKit
 import SwiftUI
-import Combine
+import ARKit
 
 extension ModelComponent {
     func width() -> Float {
