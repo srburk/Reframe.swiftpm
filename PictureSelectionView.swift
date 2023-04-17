@@ -177,7 +177,7 @@ struct PictureSelectionView_Previews: PreviewProvider {
             VStack {
                 PictureSelectionView()
             }
-            .padding()
+            .padding(.top)
             
             .frame(height: 600)
             
@@ -187,6 +187,7 @@ struct PictureSelectionView_Previews: PreviewProvider {
             
            
         }
+        .edgesIgnoringSafeArea(.all)
         .previewDevice(PreviewDevice(rawValue: "iPhone 14"))
         .previewDisplayName("iPhone 14")
     }
