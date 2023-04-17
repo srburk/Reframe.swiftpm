@@ -72,19 +72,19 @@ struct ARViewOverlay: View {
     private func barOverlayControls() -> some View {
         OverlayBarView {
             boxedControl(icon: "plus", description: "New") {
-//                arVM.bottomSheetState = .newFrame
+                arVM.bottomSheetState = .newFrame
 //                Task {
 //                    await ARViewService.shared.randomFrame()
 //                }
-                Task {
-                    
-                    if let image = UIImage(named: ContentService.images.historical.randomElement() ?? "") {
-                        if let frameURL = Bundle.main.url(forResource: "wood-frame", withExtension: ".usdz") {
-                            let newObject = VirtualGallery.GalleryObject(image: image, frameURL: frameURL, matteSize: 0.8)
-                            await VirtualGallery.shared.addObject(newObject)
-                        }
-                    }
-                }
+//                Task {
+//
+//                    if let image = UIImage(named: ContentService.images.historical.randomElement() ?? "") {
+//                        if let frameURL = Bundle.main.url(forResource: "wood-frame", withExtension: ".usdz") {
+//                            let newObject = VirtualGallery.GalleryObject(image: image, frameURL: frameURL, matteSize: 0.8)
+//                            await VirtualGallery.shared.addObject(newObject)
+//                        }
+//                    }
+//                }
             }
             .padding(.leading)
             boxedControl(icon: "camera.fill", description: "Capture") {
@@ -205,9 +205,11 @@ struct ARViewOverlay: View {
                     case .none:
                         barOverlayControls()
                     case .pictureSelection:
-                        PictureSelectionView()
+//                        PictureSelectionView()
+                        EmptyView()
                     case .frameSelection:
-                        FrameSelectionView()
+//                        FrameSelectionView()
+                        EmptyView()
                     case .userSelection:
                         selectedPictureOverlayControls()
                     case .newFrame:

@@ -9,24 +9,74 @@ import SwiftUI
 
 struct NewFrameView: View {
     
-    enum PanelSelectionMode: Hashable {
+    private enum NewFrameCreationStage {
         case image, frame
+    }
+        
+    private class NewFrameViewModel: ObservableObject {
+        @Published var image: UIImage?
+        @Published var frame: String = ContentService.frames.first!.key
+        @Published var matteSize: CGFloat = 0.8
+        
+        @Published var newFrameCreationStage: NewFrameCreationStage = .image
+    
     }
     
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
+    @ObservedObject private var vm = NewFrameViewModel()
     
-    @State private var panelSelectionMode = PanelSelectionMode.image
+    func finishCreation() {
+        
+        guard let image = vm.image else { return }
+        guard let frameURL = ContentService.frames[vm.frame] else { return }
+        
+        let newObject = VirtualGallery.GalleryObject(image: image, frameURL: frameURL, matteSize: vm.matteSize)
+        
+        Task {
+            await VirtualGallery.shared.addObject(newObject)
+        }
+                
+        arVM.bottomSheetState = .none
+    }
     
     var body: some View {
         
-        VStack(spacing: 20) {
+        VStack() {
             
-            PictureSelectionView()
+            switch (vm.newFrameCreationStage) {
+                case NewFrameCreationStage.image:
+                    PictureSelectionView(inputImage: $vm.image)
+                case NewFrameCreationStage.frame:
+                    FrameSelectionView(frame: $vm.frame, mattePercentage: $vm.matteSize)
+            }
             
-//            Picker("", selection: $panelSelectionMode) {
-//                ForEach(PanelSelectionMode.allTypes)
-//            }
-//            .pickerStyle(.segmented)
+            Spacer()
+            
+            HStack {
+                if (vm.newFrameCreationStage == .frame) {
+                    Button {
+                        vm.newFrameCreationStage = .image
+                    } label: {
+                        Label("Back", systemImage: "arrow.left")
+                    }
+                }
+                
+                Spacer()
+                
+                Button {
+                    if (vm.newFrameCreationStage == .image) {
+                        vm.newFrameCreationStage = .frame
+                    } else {
+                        finishCreation()
+                    }
+                } label: {
+                    Text("\((vm.newFrameCreationStage == .image) ? "Next" : "Add")")
+                }
+                .disabled(vm.image == nil)
+
+            }
+            .padding([.trailing, .leading], 25)
+            .padding(.bottom, 30)
         }
     }
 }

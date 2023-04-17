@@ -40,9 +40,9 @@ final class ContentService {
     }
     
     // MARK: Display name : Internal Name
-    static var frames: [String: String] = [
-        "Wood": "wood-frame",
-        "Simple Plastic" : "simple-plastic"
+    static var frames: [String: URL] = [
+        "Wood": Bundle.main.url(forResource: "wood-frame", withExtension: ".usdz")!,
+        "Simple Plastic" : Bundle.main.url(forResource: "simple-plastic", withExtension: ".usdz")!
     ]
     
     static var frameMaterials = [

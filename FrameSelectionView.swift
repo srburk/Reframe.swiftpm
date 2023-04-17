@@ -11,8 +11,8 @@ struct FrameSelectionView: View {
     
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
     
-    @State var selectedFrame: String = ContentService.frames.first!.key
-    @State var mattePercentage: Float = 0.8
+    @Binding var frame: String
+    @Binding var mattePercentage: CGFloat
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
@@ -46,8 +46,8 @@ struct FrameSelectionView: View {
                 HStack {
                     Text("Select a frame")
                     Spacer()
-                    Picker("Frame", selection: $selectedFrame) {
-                        ForEach(ContentService.frames.sorted(by: <), id: \.key) { key, value in
+                    Picker("Frame", selection: $frame) {
+                        ForEach(Array(ContentService.frames.keys), id: \.self) { key in
                             Text(key)
                         }
                     }
@@ -83,7 +83,7 @@ struct FrameSelectionView: View {
                     .foregroundColor(.gray)
                     Spacer()
                 }
-                Slider(value: $mattePercentage, in: 0...10)
+                Slider(value: $mattePercentage, in: 0...1)
             }
             .padding(.trailing)
             
@@ -100,7 +100,7 @@ struct FrameSelectionView_Previews: PreviewProvider {
             Spacer()
             
             VStack {
-                FrameSelectionView()
+//                FrameSelectionView(selectedFrame: .constant(), mattePercentage: <#Binding<Float>#>)
             }
             .padding(.top)
             
