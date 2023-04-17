@@ -94,11 +94,11 @@ struct ARViewOverlay: View {
             .padding(.leading)
             
             boxedControl(icon: "rectangle.dashed", description: "Frame") {
-                arVM.bottomSheetState = .pictureSelection
+                arVM.bottomSheetState = .frameSelection
             }
             
             boxedControl(icon: "paintbrush", description: "Matte") {
-                arVM.bottomSheetState = .pictureSelection
+                arVM.bottomSheetState = .matteSelection
             }
             
             Menu {
@@ -153,6 +153,10 @@ struct ARViewOverlay: View {
                         barOverlayControls()
                     case .pictureSelection:
                         PictureSelectionView()
+                    case .frameSelection:
+                        FrameSelectionView()
+                    case .matteSelection:
+                        MatteSelectionView()
                     case .userSelection:
                         selectedPictureOverlayControls()
                 }

@@ -33,7 +33,7 @@ final class ARViewService {
     
     func randomFrame() async {
                 
-        let image = UIImage(named: ContentService.images.randomElement()!, in: .main, with: .none)!
+        let image = UIImage(named: ContentService.images.historical.randomElement()!, in: .main, with: .none)!
         
         await newFrame(image: image)
     }

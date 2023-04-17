@@ -30,7 +30,7 @@ struct PictureSelectionView: View {
             
             HStack(alignment: .center) {
                 
-                Text("Image Selection")
+                Text("Image")
                     .font(.system(size: 20, weight: .bold))
 
                 Spacer()
@@ -52,7 +52,7 @@ struct PictureSelectionView: View {
                     .foregroundColor(.gray)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(ContentService.images, id: \.self) { image in
+                        ForEach(ContentService.images.historical, id: \.self) { image in
                             Image(image)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
@@ -89,32 +89,48 @@ struct PictureSelectionView: View {
                 Text("Custom")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.gray)
-                Menu {
-                    
-                    Button {
-                        showingCameraPickerView = true
-                    } label: {
-                        Label("Take Photo", systemImage: "camera")
-                    }
-                    
-                    Button {
-                        showingImagePickerView = true
-                    } label: {
-                        Label("Photo Library", systemImage: "photo.on.rectangle")
-                    }
+                
+                HStack {
+                    Menu {
+                        
+                        Button {
+                            showingCameraPickerView = true
+                        } label: {
+                            Label("Take Photo", systemImage: "camera")
+                        }
+                        
+                        Button {
+                            showingImagePickerView = true
+                        } label: {
+                            Label("Photo Library", systemImage: "photo.on.rectangle")
+                        }
 
-                } label: {
-                    HStack {
-                       Image(systemName: "plus")
-                        .font(.system(size: 25))
-                        .frame(width: 100, height: 100)
-                        .background(.ultraThickMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                            
-                        Spacer()
+                    } label: {
+                           Image(systemName: "plus")
+                            .font(.system(size: 25))
+                            .foregroundColor(.gray)
+                            .frame(width: 100, height: 100)
+                            .background(.ultraThickMaterial)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                                
                     }
+                    .buttonStyle(.plain)
+
+                    ForEach(ContentService.images.custom, id: \.self) { imageName in
+                        Image(uiImage: ContentService.images.customImage(imageName))
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 100, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .onTapGesture {
+                                Task {
+                                    await ARViewService.shared.replaceImage(image: UIImage(contentsOfFile: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\(imageName).png").absoluteString)!, entity: arVM.userSelectedEntity)
+                                }
+                            }
+                    }
+                    
+                    Spacer()
                 }
-                .buttonStyle(.plain)
             }
                         
             Button {
@@ -148,7 +164,6 @@ struct PictureSelectionView: View {
         
         .onChange(of: inputImage) { _ in
             loadCustomImage()
-            
         }
     }
 }
