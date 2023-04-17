@@ -13,24 +13,24 @@ struct ARViewOverlay: View {
     
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
     
-    @State private var showARTrackingModeIndicator: Bool = false
-    
-    private func arCameraState() -> String {
-        switch(arVM.cameraTrackingState) {
-            case .limited(.excessiveMotion):
-                return "Excessive Motion"
-            case .limited(.initializing):
-                return "Initializing"
-            case .limited(.relocalizing):
-                return "Trying to Resume"
-            case .normal:
-                return "Availible"
-            case .notAvailable:
-                return "Not Availible"
-            default:
-                return "Too Dark"
-        }
-    }
+//    @State private var showARTrackingModeIndicator: Bool = false
+//    
+//    private func arCameraState() -> String {
+//        switch(arVM.cameraTrackingState) {
+//            case .limited(.excessiveMotion):
+//                return "Excessive Motion"
+//            case .limited(.initializing):
+//                return "Initializing"
+//            case .limited(.relocalizing):
+//                return "Trying to Resume"
+//            case .normal:
+//                return "Availible"
+//            case .notAvailable:
+//                return "Not Availible"
+//            default:
+//                return "Too Dark"
+//        }
+//    }
     
     struct OverlayBarView<Content: View>: View {
         @ViewBuilder var content: Content
@@ -154,36 +154,48 @@ struct ARViewOverlay: View {
         VStack(alignment: .leading) {
             
             HStack {
-
-                Spacer()
-                if (showARTrackingModeIndicator) {
-                    Label(arCameraState(), systemImage: "cube.transparent")
-                        .font(.system(size: 18))
-                        .padding([.top, .bottom], 5)
-                        .padding([.trailing, .leading], 15)
-                        .background(Color.lightGray, in: Capsule())
+                
+                Button {
+                    // settings?
+                    VirtualGallery.shared.debugReport()
+                } label: {
+                    Image(systemName: "gearshape.fill")
+                        .foregroundColor(.gray)
+                        .symbolRenderingMode(.hierarchical)
                 }
+                .padding(5)
+                .background(Color.lightGray, in: Ellipse())
+                .buttonStyle(.plain)
+                .padding(.leading)
+
+//                Spacer()
+//                if (showARTrackingModeIndicator) {
+//                    Label(arCameraState(), systemImage: "cube.transparent")
+//                        .font(.system(size: 18))
+//                        .padding([.top, .bottom], 5)
+//                        .padding([.trailing, .leading], 15)
+//                        .background(Color.lightGray, in: Capsule())
+//                }
                 Spacer()
             }
             .padding(.top, 55)
             
-             // MARK: Camera state capsule
-            if #available(iOS 16.0, *) {
-                EmptyView()
-                .onChange(of: arVM.cameraTrackingState) { _ in
-                    withAnimation {
-                        showARTrackingModeIndicator = true
-                    }
-                    Task {
-                        try await Task.sleep(nanoseconds: 4_000_000_000)
-                        withAnimation {
-                            showARTrackingModeIndicator = false
-                        }
-                    }
-                }
-            } else {
-                // Fallback on earlier versions
-            }
+//             // MARK: Camera state capsule
+//            if #available(iOS 16.0, *) {
+//                EmptyView()
+//                .onChange(of: arVM.cameraTrackingState) { _ in
+//                    withAnimation {
+//                        showARTrackingModeIndicator = true
+//                    }
+//                    Task {
+//                        try await Task.sleep(nanoseconds: 4_000_000_000)
+//                        withAnimation {
+//                            showARTrackingModeIndicator = false
+//                        }
+//                    }
+//                }
+//            } else {
+//            }
             
             Spacer()
                    

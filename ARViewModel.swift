@@ -30,7 +30,7 @@ final class ARViewModel: ObservableObject {
     
     public static var shared = ARViewModel()
     
-    @Published var cameraTrackingState: ARCamera.TrackingState = .notAvailable
+//    @Published var cameraTrackingState: ARCamera.TrackingState = .notAvailable
     
     @Published var userSelectedObject: VirtualGallery.GalleryObject? {
         didSet {

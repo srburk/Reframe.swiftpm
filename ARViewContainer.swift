@@ -74,9 +74,9 @@ struct ARViewContainer : UIViewRepresentable {
             self._sizeLabelPosition = sizeLabelPosition
         }
         
-        func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-            ARViewModel.shared.cameraTrackingState = camera.trackingState
-        }
+//        func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+//            ARViewModel.shared.cameraTrackingState = camera.trackingState
+//        }
         
 //        func session(_ session: ARSession, didUpdate frame: ARFrame) {
 //            guard let selectedEntity = ARViewModel.shared.userSelectedEntity else { return }
