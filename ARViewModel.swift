@@ -33,7 +33,6 @@ final class ARViewModel: ObservableObject {
     @Published var cameraTrackingState: ARCamera.TrackingState = .notAvailable
     
     @Published var userSelectedEntity: Entity? {
-
         didSet {
             bottomSheetState = (userSelectedEntity != nil) ? .userSelection : .none
         }
