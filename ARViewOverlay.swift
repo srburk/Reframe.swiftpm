@@ -77,10 +77,16 @@ struct ARViewOverlay: View {
                 }
             }
             .padding(.leading)
-            boxedControl(icon: "camera", description: "Capture") {
+            boxedControl(icon: "camera.fill", description: "Capture") {
                 ARViewService.shared.captureScreen()
             }
+            
             Spacer()
+            
+            boxedControl(icon: "person.2.fill", description: "Connect") {
+                ARViewService.shared.captureScreen()
+            }
+            .padding(.trailing)
         }
     }
     
@@ -88,17 +94,13 @@ struct ARViewOverlay: View {
     private func selectedPictureOverlayControls() -> some View {
         OverlayBarView {
 
-            boxedControl(icon: "photo", description: "Image") {
+            boxedControl(icon: "photo.fill", description: "Image") {
                 arVM.bottomSheetState = .pictureSelection
             }
             .padding(.leading)
             
-            boxedControl(icon: "rectangle.dashed", description: "Frame") {
+            boxedControl(icon: "rectangle.inset.filled", description: "Frame") {
                 arVM.bottomSheetState = .frameSelection
-            }
-            
-            boxedControl(icon: "paintbrush", description: "Matte") {
-                arVM.bottomSheetState = .matteSelection
             }
             
             Menu {
@@ -112,7 +114,7 @@ struct ARViewOverlay: View {
 
             } label: {
                 VStack(spacing: 5) {
-                    Image(systemName: "gearshape")
+                    Image(systemName: "gearshape.fill")
                         .foregroundColor(.gray)
                         .font(.system(size: 20, weight: .medium))
                         .frame(width: 55, height: 40)
@@ -128,13 +130,8 @@ struct ARViewOverlay: View {
             
             Spacer()
             
-            Button {
-                ARViewModel.shared.userSelectedEntity = nil
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundColor(.gray)
-                    .font(.title)
+            boxedControl(icon: "arrow.up.backward", description: "Back") {
+                arVM.bottomSheetState = .none
             }
             .padding(.trailing)
         }
@@ -145,6 +142,12 @@ struct ARViewOverlay: View {
         VStack(alignment: .leading) {
             
             Spacer()
+            
+            HStack {
+                Spacer()
+                EmptyView()
+                Spacer()
+            }
                         
             VStack(alignment: .leading) {
                 
@@ -155,8 +158,6 @@ struct ARViewOverlay: View {
                         PictureSelectionView()
                     case .frameSelection:
                         FrameSelectionView()
-                    case .matteSelection:
-                        MatteSelectionView()
                     case .userSelection:
                         selectedPictureOverlayControls()
                 }

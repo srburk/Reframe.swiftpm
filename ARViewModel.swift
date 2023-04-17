@@ -12,7 +12,7 @@ import SwiftUI
 import PhotosUI
 
 enum BottomSheetState {
-    case none, pictureSelection, userSelection, frameSelection, matteSelection
+    case none, pictureSelection, userSelection, frameSelection
     
     func bottomSheetHeight() -> CGFloat {
         switch (self) {
@@ -20,8 +20,6 @@ enum BottomSheetState {
                 return 0
             case .userSelection:
                 return 0
-            case .matteSelection:
-                return 250
             default:
                 return 600
         }

@@ -12,6 +12,7 @@ struct FrameSelectionView: View {
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
     
     @State var selectedFrame: String = ContentService.frames.first!.key
+    @State var mattePercentage: Float = 0.8
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
@@ -74,6 +75,19 @@ struct FrameSelectionView: View {
                     }
                 }
             }
+            
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Matte Size")
+                        .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.gray)
+                    Spacer()
+                }
+                
+                Slider(value: $mattePercentage, in: 0...10)
+                
+            }
+            .padding(.trailing)
             
             Spacer()
             
