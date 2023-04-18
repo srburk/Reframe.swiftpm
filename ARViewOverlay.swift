@@ -88,7 +88,7 @@ struct ARViewOverlay: View {
             }
             .padding(.leading)
             boxedControl(icon: "camera.fill", description: "Capture") {
-                arVM.captureScreen()
+                VirtualGallery.shared.captureScreen()
             }
             
             Spacer()

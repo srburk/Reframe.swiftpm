@@ -29,15 +29,7 @@ enum BottomSheetState {
 final class ARViewModel: ObservableObject {
     
     public static var shared = ARViewModel()
-    
-    let arView = GalleryView(frame: .zero)
-    
-    func captureScreen() {
-        arView.snapshot(saveToHDR: false) { image in
-            guard (image != nil) else { return }
-            UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
-        }
-    }
+
     
 //    @Published var cameraTrackingState: ARCamera.TrackingState = .notAvailable
     

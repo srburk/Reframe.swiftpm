@@ -49,7 +49,7 @@ struct FrameSelectionView: View {
                 HStack {
                     Text("Select a frame")
                     Spacer()
-                    Picker("Frame", selection: $galleryObject.frameURL) {
+                    Picker("Frame", selection: $galleryObject.frameName) {
                         ForEach(Array(ContentService.frames.keys), id: \.self) { key in
                             Text(key)
                         }

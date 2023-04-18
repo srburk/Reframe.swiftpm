@@ -15,28 +15,35 @@ final class VirtualGallery: ObservableObject {
     
     static let shared = VirtualGallery()
     
+    let arView = GalleryView(frame: .zero)
+    
     struct GalleryObject: Equatable {
         var id: UUID
         var image: UIImage
-        var frameURL: URL
+        var frameName: String
         var frameColor: Color
         var matteSize: CGFloat // between 0 and 1
         var postion: SIMD3<Float>
         
-        init(image: UIImage, frameURL: URL = ContentService.frames.first!.value, matteSize: CGFloat = 0.2, position: SIMD3<Float> = .zero, frameColor: Color) {
+        init(image: UIImage, frameURL: String = ContentService.frames.first!.key, matteSize: CGFloat = 0.2, position: SIMD3<Float> = .zero, frameColor: Color) {
             self.id = UUID()
             self.image = image
-            self.frameURL = frameURL
+            self.frameName = frameURL
             self.matteSize = matteSize
             self.postion = position
             self.frameColor = frameColor
         }
     }
     
+    func captureScreen() {
+        arView.snapshot(saveToHDR: false) { image in
+            guard (image != nil) else { return }
+            UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
+        }
+    }
+    
     @Published private(set) var collection: [GalleryObject] = []
-    
-    private let arView = ARViewModel.shared.arView
-    
+        
     private var mainAnchor: AnchorEntity? {
         return arView.scene.anchors.first as? AnchorEntity
     }
@@ -60,9 +67,14 @@ final class VirtualGallery: ObservableObject {
 extension VirtualGallery {
     
     public func debugReport() {
+        guard !collection.isEmpty else { return }
         print("Virtual Gallery Collection:")
         self.collection.forEach { object in
             print("\t \(object.id)")
+            print("\t\t Frame Name: \(object.frameName)")
+            print("\t\t Frame Color: \(object.frameColor.description)")
+            print("\t\t Image: \(object.image.description)")
+            print("\t\t Matte Size: \(object.matteSize)")
         }
     }
     
@@ -73,7 +85,7 @@ extension VirtualGallery {
         ARViewModel.shared.loadingNewObject = true
         
         var cancellable: AnyCancellable? = nil
-        cancellable = ModelEntity.loadModelAsync(contentsOf: object.frameURL)
+        cancellable = ModelEntity.loadModelAsync(contentsOf: ContentService.frames[object.frameName]!)
             .sink(receiveCompletion: { error in
                 print("Error loading frame mode: \(error)")
                 cancellable?.cancel()
@@ -112,7 +124,7 @@ extension VirtualGallery {
         ARViewModel.shared.loadingNewObject = true
         
         var cancellable: AnyCancellable? = nil
-        cancellable = ModelEntity.loadModelAsync(contentsOf: object.frameURL)
+        cancellable = ModelEntity.loadModelAsync(contentsOf: ContentService.frames[object.frameName]!)
             .sink(receiveCompletion: { error in
                 print("Error loading frame mode: \(error)")
                 cancellable?.cancel()
