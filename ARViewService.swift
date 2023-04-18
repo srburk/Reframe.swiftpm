@@ -12,16 +12,16 @@ import Combine
 
 final class ARViewService {
     
-    static var shared = ARViewService()
-    
-    let arView = GalleryView(frame: .zero)
-    
-    func captureScreen() {
-        arView.snapshot(saveToHDR: false) { image in
-            guard (image != nil) else { return }
-            UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
-        }
-    }
+//    static var shared = ARViewService()
+//    
+//    let arView = GalleryView(frame: .zero)
+//    
+//    func captureScreen() {
+//        arView.snapshot(saveToHDR: false) { image in
+//            guard (image != nil) else { return }
+//            UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
+//        }
+//    }
     
 //    func deleteEntity() async {
 //        guard let wallAnchor = await self.arView.scene.anchors.first else { return }

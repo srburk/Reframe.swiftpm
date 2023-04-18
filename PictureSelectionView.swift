@@ -17,13 +17,6 @@ struct PictureSelectionView: View {
 
     @Binding var inputImage: UIImage?
         
-    private func loadCustomImage() {
-        guard let inputImage else { return }
-//        Task {
-//            await ARViewService.shared.replaceImage(image: inputImage, entity: arVM.userSelectedEntity)
-//        }
-    }
-
     var body: some View {
         
         VStack(alignment: .center, spacing: 20) {
@@ -147,9 +140,9 @@ struct PictureSelectionView: View {
                 .ignoresSafeArea(.all)
         })
         
-        .onChange(of: inputImage) { _ in
-            loadCustomImage()
-        }
+//        .onChange(of: inputImage) { _ in
+//            loadCustomImage()
+//        }
     }
 }
 

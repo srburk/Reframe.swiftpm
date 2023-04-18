@@ -88,7 +88,7 @@ struct ARViewOverlay: View {
             }
             .padding(.leading)
             boxedControl(icon: "camera.fill", description: "Capture") {
-                ARViewService.shared.captureScreen()
+                arVM.captureScreen()
             }
             
             Spacer()

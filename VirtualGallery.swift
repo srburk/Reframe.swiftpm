@@ -34,7 +34,7 @@ final class VirtualGallery: ObservableObject {
     
     @Published private(set) var collection: [GalleryObject] = []
     
-    private let arView = ARViewService.shared.arView
+    private let arView = ARViewModel.shared.arView
     
     private var mainAnchor: AnchorEntity? {
         return arView.scene.anchors.first as? AnchorEntity

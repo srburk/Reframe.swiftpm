@@ -17,7 +17,7 @@ struct ARViewContainer : UIViewRepresentable {
                 
     func makeUIView(context: Context) -> UIView {
         
-        let arView = ARViewService.shared.arView
+        let arView = ARViewModel.shared.arView
         
         let coachingOverlay = ARCoachingOverlayView(frame: arView.frame)
         coachingOverlay.translatesAutoresizingMaskIntoConstraints = false
