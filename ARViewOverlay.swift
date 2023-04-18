@@ -192,11 +192,10 @@ struct ARViewOverlay: View {
                     case .none:
                         barOverlayControls()
                     case .pictureSelection:
-//                        PictureSelectionView()
-                        EmptyView()
+                        PictureSelectionView(galleryObject: $arVM.userSelectedObject.optionalBinding()!)
+//                        PictureSelectionView(inputImage: $arVM.userSelectedObject.optionalBinding()!.image)
                     case .frameSelection:
-//                        FrameSelectionView()
-                        EmptyView()
+                        FrameSelectionView(galleryObject: $arVM.userSelectedObject.optionalBinding()!)
                     case .userSelection:
                         selectedPictureOverlayControls()
                     case .newFrame:

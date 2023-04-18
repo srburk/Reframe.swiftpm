@@ -11,7 +11,7 @@ import PhotosUI
 
 struct ImagePickerComponent: UIViewControllerRepresentable {
         
-    @Binding var image: UIImage?
+    @Binding var image: UIImage
     @Environment(\.presentationMode) var isPresented
     var sourceType: UIImagePickerController.SourceType
         
@@ -41,7 +41,7 @@ struct ImagePickerComponent: UIViewControllerRepresentable {
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             guard let selectedImage = info[.originalImage] as? UIImage else { return }
             self.picker.image = selectedImage
-            if let data = self.picker.image?.pngData() {
+            if let data = self.picker.image.pngData() {
                 do {
                     let imageID = UUID()
                     guard let fileURL = ContentService.documentDirectory()?.appendingPathComponent("\(imageID.uuidString).png") else { return }

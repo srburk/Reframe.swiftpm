@@ -13,28 +13,32 @@ struct NewFrameView: View {
         case image, frame
     }
         
-    private class NewFrameViewModel: ObservableObject {
-        @Published var image: UIImage?
-        @Published var frame: String = ContentService.frames.first!.key
-        @Published var frameColor: Color = .black
-        @Published var matteSize: CGFloat = 0.2
-        
-        @Published var newFrameCreationStage: NewFrameCreationStage = .image
-    
-    }
+//    private class NewFrameViewModel: ObservableObject {
+//
+//        @Published var image: UIImage = UIImage()
+//        @Published var frame: String = ContentService.frames.first!.key
+//        @Published var frameColor: Color = .black
+//        @Published var matteSize: CGFloat = 0.2
+//
+//        @Published var newFrameCreationStage: NewFrameCreationStage = .image
+//
+//    }
     
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
-    @ObservedObject private var vm = NewFrameViewModel()
+//    @ObservedObject private var vm = NewFrameViewModel()
+    
+    @State private var newFrameCreationStage: NewFrameCreationStage = .image
+    @State var newGalleryObject = VirtualGallery.GalleryObject(image: UIImage(), frameColor: .black)
     
     func finishCreation() {
         
-        guard let image = vm.image else { return }
-        guard let frameURL = ContentService.frames[vm.frame] else { return }
+//        guard let image = vm.image else { return }
+//        guard let frameURL = ContentService.frames[vm.frame] else { return }
         
-        let newObject = VirtualGallery.GalleryObject(image: image, frameURL: frameURL, matteSize: vm.matteSize, frameColor: UIColor(vm.frameColor))
+//        let newObject = VirtualGallery.GalleryObject(image: vm.image, frameURL: frameURL, matteSize: vm.matteSize, frameColor: UIColor(vm.frameColor))
         
         Task {
-            await VirtualGallery.shared.addObject(newObject)
+            await VirtualGallery.shared.addObject(newGalleryObject)
         }
                 
         arVM.bottomSheetState = .none
@@ -44,19 +48,21 @@ struct NewFrameView: View {
         
         VStack() {
             
-            switch (vm.newFrameCreationStage) {
+            switch (newFrameCreationStage) {
                 case NewFrameCreationStage.image:
-                    PictureSelectionView(inputImage: $vm.image)
+                    PictureSelectionView(galleryObject: $newGalleryObject)
                 case NewFrameCreationStage.frame:
-                    FrameSelectionView(frame: $vm.frame, mattePercentage: $vm.matteSize, frameColor: $vm.frameColor)
+//                    EmptyView()
+                    FrameSelectionView(galleryObject: $newGalleryObject)
+//                    FrameSelectionView(frame: $vm.frame, mattePercentage: $vm.matteSize, frameColor: $vm.frameColor)
             }
             
             Spacer()
             
             HStack {
-                if (vm.newFrameCreationStage == .frame) {
+                if (newFrameCreationStage == .frame) {
                     Button {
-                        vm.newFrameCreationStage = .image
+                        newFrameCreationStage = .image
                     } label: {
                         Label("Back", systemImage: "arrow.left")
                     }
@@ -65,16 +71,15 @@ struct NewFrameView: View {
                 Spacer()
                 
                 Button {
-                    if (vm.newFrameCreationStage == .image) {
-                        vm.newFrameCreationStage = .frame
+                    if (newFrameCreationStage == .image) {
+                        newFrameCreationStage = .frame
                     } else {
                         finishCreation()
                     }
                 } label: {
-                    Text("\((vm.newFrameCreationStage == .image) ? "Next" : "Add")")
+                    Text("\((newFrameCreationStage == .image) ? "Next" : "Add")")
                 }
-                .disabled(vm.image == nil)
-
+//                .disabled(vm.image == nil)
             }
             .padding([.trailing, .leading], 25)
             .padding(.bottom, 30)

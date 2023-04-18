@@ -15,7 +15,8 @@ struct PictureSelectionView: View {
     @State private var showingImagePickerView = false
     @State private var showingCameraPickerView = false
 
-    @Binding var inputImage: UIImage?
+//    @Binding var inputImage: UIImage
+    @Binding var galleryObject: VirtualGallery.GalleryObject
         
     var body: some View {
         
@@ -29,7 +30,7 @@ struct PictureSelectionView: View {
                 Spacer()
                 
                 Button {
-//                    arVM.bottomSheetState = .userSelection
+                    arVM.bottomSheetState = .none
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .symbolRenderingMode(.hierarchical)
@@ -49,14 +50,14 @@ struct PictureSelectionView: View {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 18)
                                     .frame(width: 110, height: 110)
-                                    .foregroundColor((UIImage(named: image) == inputImage) ? .gray : Color.clear)
+                                    .foregroundColor((UIImage(named: image) == galleryObject.image) ? .gray : Color.clear)
                                 Image(image)
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 100, height: 100)
                                     .clipShape(RoundedRectangle(cornerRadius: 15))
                                     .onTapGesture {
-                                        self.inputImage = UIImage(named: image)
+                                        self.galleryObject.image = UIImage(named: image)!
                                     }
                             }
                         }
@@ -132,11 +133,11 @@ struct PictureSelectionView: View {
         Spacer()
         
         .sheet(isPresented: $showingImagePickerView) {
-            ImagePickerComponent(image: $inputImage, sourceType: .photoLibrary)
+            ImagePickerComponent(image: $galleryObject.image, sourceType: .photoLibrary)
         }
         
         .fullScreenCover(isPresented: $showingCameraPickerView, content: {
-            ImagePickerComponent(image: $inputImage, sourceType: .camera)
+            ImagePickerComponent(image: $galleryObject.image, sourceType: .camera)
                 .ignoresSafeArea(.all)
         })
         
@@ -153,7 +154,7 @@ struct PictureSelectionView_Previews: PreviewProvider {
             Spacer()
             
             VStack {
-                PictureSelectionView(inputImage: .constant(UIImage(named: "MonaLisa")))
+//                PictureSelectionView(gall: .constant(UIImage(named: "MonaLisa")!))
             }
             .padding(.top)
             

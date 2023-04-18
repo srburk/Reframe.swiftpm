@@ -42,11 +42,23 @@ final class ARViewModel: ObservableObject {
 //    @Published var cameraTrackingState: ARCamera.TrackingState = .notAvailable
     
     @Published var userSelectedObject: VirtualGallery.GalleryObject? {
-        didSet {
-            bottomSheetState = (userSelectedObject != nil) ? .userSelection : .none
+        didSet(newValue) {
+            if let userSelectedObject {
+                bottomSheetState = .userSelection
+                if newValue?.id == userSelectedObject.id {
+                    if newValue != userSelectedObject {
+                        Task {
+                            await VirtualGallery.shared.replaceObject(userSelectedObject)
+                        }
+                    }
+                }
+            } else {
+                bottomSheetState = .none
+            }
+//            bottomSheetState = (userSelectedObject != nil) ? .userSelection : .none
         }
     }
-    
+
     @Published var loadingNewObject: Bool = false
     
     @Published private(set) var bottomSheetHeight: CGFloat = 0

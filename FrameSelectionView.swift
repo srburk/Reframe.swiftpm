@@ -11,9 +11,11 @@ struct FrameSelectionView: View {
     
     @ObservedObject var arVM: ARViewModel = ARViewModel.shared
     
-    @Binding var frame: String
-    @Binding var mattePercentage: CGFloat
-    @Binding var frameColor: Color
+//    @Binding var frame: String
+//    @Binding var mattePercentage: CGFloat
+//    @Binding var frameColor: Color
+    
+    @Binding var galleryObject: VirtualGallery.GalleryObject
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
@@ -47,7 +49,7 @@ struct FrameSelectionView: View {
                 HStack {
                     Text("Select a frame")
                     Spacer()
-                    Picker("Frame", selection: $frame) {
+                    Picker("Frame", selection: $galleryObject.frameURL) {
                         ForEach(Array(ContentService.frames.keys), id: \.self) { key in
                             Text(key)
                         }
@@ -66,7 +68,7 @@ struct FrameSelectionView: View {
                     .foregroundColor(.gray)
                 
                 HStack {
-                    ColorPicker(selection: $frameColor, supportsOpacity: false, label: {
+                    ColorPicker(selection: $galleryObject.frameColor, supportsOpacity: false, label: {
                         Text("Select a color")
                     })
                 }
@@ -80,7 +82,7 @@ struct FrameSelectionView: View {
                     .foregroundColor(.gray)
                     Spacer()
                 }
-                Slider(value: $mattePercentage, in: 0...1) {
+                Slider(value: $galleryObject.matteSize, in: 0...1) {
                     
                 } minimumValueLabel: {
                     Image(systemName: "minus")
@@ -103,7 +105,7 @@ struct FrameSelectionView_Previews: PreviewProvider {
             Spacer()
             
             VStack {
-                FrameSelectionView(frame: .constant("Wood"), mattePercentage: .constant(0.2), frameColor: .constant(.black))
+//                FrameSelectionView(frame: .constant("Wood"), mattePercentage: .constant(0.2), frameColor: .constant(.black))
             }
             .padding(.top)
             
