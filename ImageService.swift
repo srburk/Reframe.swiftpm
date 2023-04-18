@@ -31,8 +31,8 @@ final class ImageService {
         UIColor.white.setFill()
         UIRectFill(CGRect(origin: .zero, size: textureImageSize))
         
-        let scaledImageWidth = workingImage.size.width * matteSize
-        let scaledImageHeight = workingImage.size.height * matteSize
+        let scaledImageWidth = workingImage.size.width * (1 - matteSize)
+        let scaledImageHeight = workingImage.size.height * (1 - matteSize)
         
         let imageRect = CGRect(x: (textureImageWidth - scaledImageWidth) / 2, y: (textureImageHeight - scaledImageHeight) / 2, width: scaledImageWidth, height: scaledImageHeight)
         

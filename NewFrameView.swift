@@ -16,7 +16,7 @@ struct NewFrameView: View {
     private class NewFrameViewModel: ObservableObject {
         @Published var image: UIImage?
         @Published var frame: String = ContentService.frames.first!.key
-        @Published var matteSize: CGFloat = 0.8
+        @Published var matteSize: CGFloat = 0.2
         
         @Published var newFrameCreationStage: NewFrameCreationStage = .image
     

@@ -114,18 +114,15 @@ struct PictureSelectionView: View {
                     }
                     .buttonStyle(.plain)
 
-                    ForEach(ContentService.images.custom, id: \.self) { imageName in
-                        Image(uiImage: ContentService.images.customImage(imageName))
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 100, height: 100)
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
-                            .onTapGesture {
-//                                Task {
-//                                    await ARViewService.shared.replaceImage(image: UIImage(contentsOfFile: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\(imageName).png").absoluteString)!, entity: arVM.userSelectedEntity)
-//                                }
-                            }
-                    }
+//                    ForEach(ContentService.images.custom, id: \.self) { imageName in
+//                        Image(uiImage: ContentService.images.customImage(imageName))
+//                            .resizable()
+//                            .aspectRatio(contentMode: .fill)
+//                            .frame(width: 100, height: 100)
+//                            .clipShape(RoundedRectangle(cornerRadius: 15))
+//                            .onTapGesture {
+//
+//                    }
                     
                     Spacer()
                 }

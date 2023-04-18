@@ -38,7 +38,7 @@ final class VirtualGallery: ObservableObject {
         return arView.scene.anchors.first as? AnchorEntity
     }
     
-    private func imageMaterial(_ image: UIImage, aspectRatio: CGFloat ,matteSize: CGFloat = 0.8) -> Material {
+    private func imageMaterial(_ image: UIImage, aspectRatio: CGFloat, matteSize: CGFloat = 0.2) -> Material {
         var imageMaterial = SimpleMaterial()
                 
             if let textureImage = ImageService.processForTexture(image: image, aspectRatio: aspectRatio, matteSize: matteSize) {
@@ -79,7 +79,7 @@ extension VirtualGallery {
                     let aspectRatio = frameModel.width() / frameModel.height()
                     
                     frameEntity.model = ModelComponent(mesh: frameModel.mesh, materials: [
-                        self.imageMaterial(object.image, aspectRatio: aspectRatio),
+                        self.imageMaterial(object.image, aspectRatio: aspectRatio, matteSize: object.matteSize),
                         UnlitMaterial(),
                         ContentService.FrameMaterials.simpleMaterial()
                     ])

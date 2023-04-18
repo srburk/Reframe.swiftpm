@@ -154,21 +154,8 @@ struct ARViewOverlay: View {
         VStack(alignment: .leading) {
             
             HStack {
-                
-                Button {
-                    // settings?
-                    VirtualGallery.shared.debugReport()
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                        .foregroundColor(.gray)
-                        .symbolRenderingMode(.hierarchical)
-                }
-                .padding(5)
-                .background(Color.lightGray, in: Ellipse())
-                .buttonStyle(.plain)
-                .padding(.leading)
 
-//                Spacer()
+                Spacer()
 //                if (showARTrackingModeIndicator) {
 //                    Label(arCameraState(), systemImage: "cube.transparent")
 //                        .font(.system(size: 18))

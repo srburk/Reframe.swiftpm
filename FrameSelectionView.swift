@@ -78,12 +78,18 @@ struct FrameSelectionView: View {
             
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Matte")
+                    Text("Matte Size")
                         .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.gray)
                     Spacer()
                 }
-                Slider(value: $mattePercentage, in: 0...1)
+                Slider(value: $mattePercentage, in: 0...1) {
+                    
+                } minimumValueLabel: {
+                    Image(systemName: "minus")
+                } maximumValueLabel: {
+                    Image(systemName: "plus")
+                }
             }
             .padding(.trailing)
             
@@ -100,7 +106,7 @@ struct FrameSelectionView_Previews: PreviewProvider {
             Spacer()
             
             VStack {
-//                FrameSelectionView(selectedFrame: .constant(), mattePercentage: <#Binding<Float>#>)
+                FrameSelectionView(frame: .constant("Wood"), mattePercentage: .constant(0.2))
             }
             .padding(.top)
             
