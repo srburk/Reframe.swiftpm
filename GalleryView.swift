@@ -54,6 +54,9 @@ class GalleryView: ARView {
             ARViewModel.shared.userSelectedObject = VirtualGallery.shared.collection.first(where: { $0.id.uuidString == tappedEntity.name })
         } else {
             ARViewModel.shared.userSelectedObject = nil
+            withAnimation {
+                ARViewModel.shared.bottomSheetState = .none
+            }
         }
     }
 }

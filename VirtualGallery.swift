@@ -18,15 +18,17 @@ final class VirtualGallery: ObservableObject {
         var id: UUID
         var image: UIImage
         var frameURL: URL
+        var frameColor: UIColor
         var matteSize: CGFloat // between 0 and 1
         var postion: SIMD3<Float>
         
-        init(image: UIImage, frameURL: URL, matteSize: CGFloat, position: SIMD3<Float> = .zero) {
+        init(image: UIImage, frameURL: URL, matteSize: CGFloat, position: SIMD3<Float> = .zero, frameColor: UIColor) {
             self.id = UUID()
             self.image = image
             self.frameURL = frameURL
             self.matteSize = matteSize
             self.postion = position
+            self.frameColor = frameColor
         }
     }
     
@@ -81,7 +83,7 @@ extension VirtualGallery {
                     frameEntity.model = ModelComponent(mesh: frameModel.mesh, materials: [
                         self.imageMaterial(object.image, aspectRatio: aspectRatio, matteSize: object.matteSize),
                         UnlitMaterial(),
-                        ContentService.FrameMaterials.simpleMaterial()
+                        SimpleMaterial(color: object.frameColor, roughness: 0.5, isMetallic: false)
                     ])
                     
                     guard let mainAnchor = self.mainAnchor else { return}

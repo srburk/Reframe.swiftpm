@@ -13,6 +13,7 @@ struct FrameSelectionView: View {
     
     @Binding var frame: String
     @Binding var mattePercentage: CGFloat
+    @Binding var frameColor: Color
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
@@ -60,20 +61,16 @@ struct FrameSelectionView: View {
             }
             
             VStack(alignment: .leading) {
-                Text("Materials")
+                Text("Frame Color")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.gray)
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(0..<5) { _ in
-                            Image("MonaLisa")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 100, height: 100)
-                                .clipShape(RoundedRectangle(cornerRadius: 15))
-                        }
-                    }
+                
+                HStack {
+                    ColorPicker(selection: $frameColor, supportsOpacity: false, label: {
+                        Text("Select a color")
+                    })
                 }
+                .padding(.trailing, 10)
             }
             
             VStack(alignment: .leading) {
@@ -106,7 +103,7 @@ struct FrameSelectionView_Previews: PreviewProvider {
             Spacer()
             
             VStack {
-                FrameSelectionView(frame: .constant("Wood"), mattePercentage: .constant(0.2))
+                FrameSelectionView(frame: .constant("Wood"), mattePercentage: .constant(0.2), frameColor: .constant(.black))
             }
             .padding(.top)
             

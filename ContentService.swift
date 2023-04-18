@@ -25,35 +25,14 @@ final class ContentService {
                 url.lastPathComponent
             }
         }
-        
-        static func customImage(_ name: String) -> UIImage {
-            var image = UIImage()
-            
-            guard let imageURL = ContentService.documentDirectory()?.appendingPathComponent("\(name).png") else { return image }
-            
-            print("URL is: \(imageURL) | Existance: \(FileManager.default.fileExists(atPath: imageURL.absoluteString))")
-            
-            image = UIImage(contentsOfFile: imageURL.absoluteString) ?? UIImage()
-            
-            return image
-        }
     }
     
     // MARK: Display name : Internal Name
     static var frames: [String: URL] = [
         "Wood": Bundle.main.url(forResource: "wood-frame", withExtension: ".usdz")!,
-        "Simple Plastic" : Bundle.main.url(forResource: "simple-plastic", withExtension: ".usdz")!
+        "Simple Plastic" : Bundle.main.url(forResource: "simple-plastic", withExtension: ".usdz")!,
+        "Elaborate" : Bundle.main.url(forResource: "elaborate", withExtension: ".usdz")!
     ]
-    
-    static var frameMaterials = [
-        SimpleMaterial(color: .black, isMetallic: false)
-    ]
-    
-    struct FrameMaterials {
-        static func simpleMaterial() -> Material {
-            return SimpleMaterial(color: .black, isMetallic: false)
-        }
-    }
     
     static func documentDirectory() -> URL? {
         return try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)

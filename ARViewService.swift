@@ -106,29 +106,29 @@ final class ARViewService {
 //        return frameMaterial
 //    }
     
-    private func matteMaterial() -> Material {
-        var matteMaterial = SimpleMaterial()
-        
-        matteMaterial.color = SimpleMaterial.BaseColor(tint: .white)
-        matteMaterial.roughness = 0.5
-        matteMaterial.metallic = 0.0
-        
-        return matteMaterial
-    }
-    
-    private func imageMaterial(_ image: CGImage) -> Material {
-        var imageMaterial = SimpleMaterial()
-        
-        imageMaterial.metallic = 0.0
-        imageMaterial.roughness = 0.5
-        
-        do {
-            let texture = try TextureResource.generate(from: image, options: .init(semantic: .color))
-            imageMaterial.color = SimpleMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
-        } catch {
-            print("Error loading image")
-        }
-        
-        return imageMaterial
-    }
+//    private func matteMaterial() -> Material {
+//        var matteMaterial = SimpleMaterial()
+//        
+//        matteMaterial.color = SimpleMaterial.BaseColor(tint: .white)
+//        matteMaterial.roughness = 0.5
+//        matteMaterial.metallic = 0.0
+//        
+//        return matteMaterial
+//    }
+//    
+//    private func imageMaterial(_ image: CGImage) -> Material {
+//        var imageMaterial = SimpleMaterial()
+//        
+//        imageMaterial.metallic = 0.0
+//        imageMaterial.roughness = 0.5
+//        
+//        do {
+//            let texture = try TextureResource.generate(from: image, options: .init(semantic: .color))
+//            imageMaterial.color = SimpleMaterial.BaseColor(tint: .white, texture: MaterialParameters.Texture(texture))
+//        } catch {
+//            print("Error loading image")
+//        }
+//        
+//        return imageMaterial
+//    }
 }

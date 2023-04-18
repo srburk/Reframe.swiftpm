@@ -16,6 +16,7 @@ struct NewFrameView: View {
     private class NewFrameViewModel: ObservableObject {
         @Published var image: UIImage?
         @Published var frame: String = ContentService.frames.first!.key
+        @Published var frameColor: Color = .black
         @Published var matteSize: CGFloat = 0.2
         
         @Published var newFrameCreationStage: NewFrameCreationStage = .image
@@ -30,7 +31,7 @@ struct NewFrameView: View {
         guard let image = vm.image else { return }
         guard let frameURL = ContentService.frames[vm.frame] else { return }
         
-        let newObject = VirtualGallery.GalleryObject(image: image, frameURL: frameURL, matteSize: vm.matteSize)
+        let newObject = VirtualGallery.GalleryObject(image: image, frameURL: frameURL, matteSize: vm.matteSize, frameColor: UIColor(vm.frameColor))
         
         Task {
             await VirtualGallery.shared.addObject(newObject)
@@ -47,7 +48,7 @@ struct NewFrameView: View {
                 case NewFrameCreationStage.image:
                     PictureSelectionView(inputImage: $vm.image)
                 case NewFrameCreationStage.frame:
-                    FrameSelectionView(frame: $vm.frame, mattePercentage: $vm.matteSize)
+                    FrameSelectionView(frame: $vm.frame, mattePercentage: $vm.matteSize, frameColor: $vm.frameColor)
             }
             
             Spacer()

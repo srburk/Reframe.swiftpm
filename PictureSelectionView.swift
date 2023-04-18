@@ -53,14 +53,19 @@ struct PictureSelectionView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(ContentService.images.historical, id: \.self) { image in
-                            Image(image)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 100, height: 100)
-                                .clipShape(RoundedRectangle(cornerRadius: 15))
-                                .onTapGesture {
-                                    self.inputImage = UIImage(named: image)
-                                }
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 18)
+                                    .frame(width: 110, height: 110)
+                                    .foregroundColor((UIImage(named: image) == inputImage) ? .gray : Color.clear)
+                                Image(image)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 100, height: 100)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                                    .onTapGesture {
+                                        self.inputImage = UIImage(named: image)
+                                    }
+                            }
                         }
                     }
                 }
