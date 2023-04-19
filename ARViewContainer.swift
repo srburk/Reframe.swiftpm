@@ -73,7 +73,7 @@ struct ARViewContainer : UIViewRepresentable {
         init(sizeLabelPosition: Binding<SIMD3<Float>>) {
             self._sizeLabelPosition = sizeLabelPosition
         }
-        
+                
 //        func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
 //            ARViewModel.shared.cameraTrackingState = camera.trackingState
 //        }

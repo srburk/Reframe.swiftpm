@@ -64,18 +64,4 @@ class GalleryView: ARView {
             }
         }
     }
-    
-//    @MainActor override dynamic func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//
-//        guard !touches.isEmpty else { return }
-//        let tappedLocation = touches.first!.location(in: arView)
-//        if let tappedEntity = arView.entity(at: tappedLocation) {
-//            ARViewModel.shared.userSelectedObject = VirtualGallery.shared.collection.first(where: { $0.id.uuidString == tappedEntity.name })
-//        } else {
-//            ARViewModel.shared.userSelectedObject = nil
-//            withAnimation {
-//                ARViewModel.shared.bottomSheetState = .none
-//            }
-//        }
-//    }
 }

@@ -31,6 +31,15 @@ final class VirtualGallery: ObservableObject {
     // MARK: Published properties
     @Published var loadingNewObject: Bool = false
     @Published var bottomSheetState: BottomSheetState = .normal
+//    @Published var isARSessionActive: Bool = false {
+//        didSet {
+//            if isARSessionActive {
+//                startARSession()
+//            } else {
+//                pauseARSession()
+//            }
+//        }
+//    }
     @Published var isObjectSelected: Bool = false {
         didSet {
             if (!isObjectSelected) {
@@ -91,6 +100,14 @@ final class VirtualGallery: ObservableObject {
     private var mainAnchor: AnchorEntity? {
         return arView.scene.anchors.first as? AnchorEntity
     }
+    
+//    private func startARSession() {
+//        arView.session.run(GalleryView.defaultSessionConfig, options: .resetTracking)
+//    }
+//    
+//    private func pauseARSession() {
+//        arView.session.pause()
+//    }
     
     private func imageMaterial(_ image: UIImage, aspectRatio: CGFloat, matteSize: CGFloat = 0.2) -> RealityKit.Material {
         var imageMaterial = SimpleMaterial()

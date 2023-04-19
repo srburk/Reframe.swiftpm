@@ -8,22 +8,30 @@
 import SwiftUI
 
 struct ContentView: View {
-        
+    
+    // Persistent
+    @AppStorage("needsOnboarding") var needsOnboarding: Bool = true
+    
     var body: some View {
-        
-//        PictureSelectionView()
-        
-        ZStack {
-            ARViewContainer()
-            ARViewOverlay()
-        }
-        .edgesIgnoringSafeArea(.all)
-        .prefersPersistentSystemOverlaysHidden()
+              
+//        if (needsOnboarding) {
+//            OnboardingView()
+//        } else {
+            ZStack {
+                ARViewContainer()
+                ARViewOverlay()
+                
+            }
+            .edgesIgnoringSafeArea(.all)
+            .prefersPersistentSystemOverlaysHidden()
+//        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .previewDevice(PreviewDevice(rawValue: "iPhone 14"))
+            .previewDisplayName("iPhone 14")
     }
 }
