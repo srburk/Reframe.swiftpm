@@ -11,26 +11,8 @@ import ARKit
 
 struct ARViewOverlay: View {
     
-    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
-    
-//    @State private var showARTrackingModeIndicator: Bool = false
-//    
-//    private func arCameraState() -> String {
-//        switch(arVM.cameraTrackingState) {
-//            case .limited(.excessiveMotion):
-//                return "Excessive Motion"
-//            case .limited(.initializing):
-//                return "Initializing"
-//            case .limited(.relocalizing):
-//                return "Trying to Resume"
-//            case .normal:
-//                return "Availible"
-//            case .notAvailable:
-//                return "Not Availible"
-//            default:
-//                return "Too Dark"
-//        }
-//    }
+//    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
+    @ObservedObject var virtualGallery = VirtualGallery.shared
     
     struct OverlayBarView<Content: View>: View {
         @ViewBuilder var content: Content
@@ -72,29 +54,17 @@ struct ARViewOverlay: View {
     private func barOverlayControls() -> some View {
         OverlayBarView {
             boxedControl(icon: "plus", description: "New") {
-                arVM.bottomSheetState = .newFrame
-//                Task {
-//                    await ARViewService.shared.randomFrame()
-//                }
-//                Task {
-//
-//                    if let image = UIImage(named: ContentService.images.historical.randomElement() ?? "") {
-//                        if let frameURL = Bundle.main.url(forResource: "wood-frame", withExtension: ".usdz") {
-//                            let newObject = VirtualGallery.GalleryObject(image: image, frameURL: frameURL, matteSize: 0.8)
-//                            await VirtualGallery.shared.addObject(newObject)
-//                        }
-//                    }
-//                }
+                virtualGallery.bottomSheetState = .newFrame
             }
             .padding(.leading)
             boxedControl(icon: "camera.fill", description: "Capture") {
-                VirtualGallery.shared.captureScreen()
+                virtualGallery.captureScreen()
             }
             
             Spacer()
             
             boxedControl(icon: "person.2.fill", description: "Connect") {
-                VirtualGallery.shared.debugReport()
+                virtualGallery.debugReport()
             }
             .padding(.trailing)
         }
@@ -105,21 +75,21 @@ struct ARViewOverlay: View {
         OverlayBarView {
 
             boxedControl(icon: "photo.fill", description: "Image") {
-                arVM.bottomSheetState = .pictureSelection
+                virtualGallery.bottomSheetState = .pictureSelection
             }
             .padding(.leading)
             
             boxedControl(icon: "rectangle.inset.filled", description: "Frame") {
-                arVM.bottomSheetState = .frameSelection
+                virtualGallery.bottomSheetState = .frameSelection
             }
             
             Menu {
                 Button(role: .destructive) {
                     Task {
 //                        await ARViewService.shared.deleteEntity()
-                        if let selectedEntity = arVM.userSelectedObject {
-                            VirtualGallery.shared.removeObject(selectedEntity)
-                        }
+//                        if let selectedEntity = arVM.userSelectedObject {
+//                            VirtualGallery.shared.removeObject(selectedEntity)
+//                        }
                     }
                 } label: {
                     Label("Delete", systemImage: "trash")
@@ -143,7 +113,8 @@ struct ARViewOverlay: View {
             Spacer()
             
             boxedControl(icon: "arrow.up.backward", description: "Back") {
-                arVM.bottomSheetState = .none
+                virtualGallery.selectedGalleryObject.isSelected = false
+                virtualGallery.isObjectSelected = false
             }
             .padding(.trailing)
         }
@@ -154,50 +125,25 @@ struct ARViewOverlay: View {
         VStack(alignment: .leading) {
             
             HStack {
-
-                Spacer()
-//                if (showARTrackingModeIndicator) {
-//                    Label(arCameraState(), systemImage: "cube.transparent")
-//                        .font(.system(size: 18))
-//                        .padding([.top, .bottom], 5)
-//                        .padding([.trailing, .leading], 15)
-//                        .background(Color.lightGray, in: Capsule())
-//                }
                 Spacer()
             }
             .padding(.top, 55)
-            
-//             // MARK: Camera state capsule
-//            if #available(iOS 16.0, *) {
-//                EmptyView()
-//                .onChange(of: arVM.cameraTrackingState) { _ in
-//                    withAnimation {
-//                        showARTrackingModeIndicator = true
-//                    }
-//                    Task {
-//                        try await Task.sleep(nanoseconds: 4_000_000_000)
-//                        withAnimation {
-//                            showARTrackingModeIndicator = false
-//                        }
-//                    }
-//                }
-//            } else {
-//            }
             
             Spacer()
                    
             VStack(alignment: .leading) {
                 
-                switch (arVM.bottomSheetState) {
-                    case .none:
-                        barOverlayControls()
+                switch (virtualGallery.bottomSheetState) {
+                    case .normal:
+                        if (virtualGallery.isObjectSelected) {
+                            selectedPictureOverlayControls()
+                        } else {
+                            barOverlayControls()
+                        }
                     case .pictureSelection:
-                        PictureSelectionView(galleryObject: $arVM.userSelectedObject.optionalBinding()!)
-//                        PictureSelectionView(inputImage: $arVM.userSelectedObject.optionalBinding()!.image)
+                        PictureSelectionView(galleryObject: virtualGallery.selectedGalleryObject)
                     case .frameSelection:
-                        FrameSelectionView(galleryObject: $arVM.userSelectedObject.optionalBinding()!)
-                    case .userSelection:
-                        selectedPictureOverlayControls()
+                        FrameSelectionView(galleryObject: virtualGallery.selectedGalleryObject)
                     case .newFrame:
                         NewFrameView()
                 }
@@ -205,7 +151,7 @@ struct ARViewOverlay: View {
             .padding([.top])
             .padding(.bottom, 20)
             
-            .frame(height: arVM.bottomSheetHeight)
+            .frame(height: virtualGallery.bottomSheetState.bottomSheetHeight())
             
             .frame(maxWidth: (UIDevice.current.userInterfaceIdiom == .pad) ? 350 : .infinity)
             
@@ -216,7 +162,7 @@ struct ARViewOverlay: View {
         }
         
         .overlay {
-            if (arVM.loadingNewObject) {
+            if (VirtualGallery.shared.loadingNewObject) {
                 ProgressView()
             }
         }

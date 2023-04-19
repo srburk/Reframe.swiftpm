@@ -41,15 +41,15 @@ struct ImagePickerComponent: UIViewControllerRepresentable {
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             guard let selectedImage = info[.originalImage] as? UIImage else { return }
             self.picker.image = selectedImage
-            if let data = self.picker.image.pngData() {
-                do {
-                    let imageID = UUID()
-                    guard let fileURL = ContentService.documentDirectory()?.appendingPathComponent("\(imageID.uuidString).png") else { return }
-                    try data.write(to: fileURL)
-                } catch {
-                    print(error)
-                }
-            }
+//            if let data = self.picker.image.pngData() {
+//                do {
+//                    let imageID = UUID()
+//                    guard let fileURL = ContentService.documentDirectory()?.appendingPathComponent("\(imageID.uuidString).png") else { return }
+//                    try data.write(to: fileURL)
+//                } catch {
+//                    print(error)
+//                }
+//            }
             self.picker.isPresented.wrappedValue.dismiss()
         }
         

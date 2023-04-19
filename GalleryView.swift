@@ -47,16 +47,35 @@ class GalleryView: ARView {
     var arView: ARView { return self }
     
     @MainActor override dynamic func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         guard !touches.isEmpty else { return }
-        let tappedLocation = touches.first!.location(in: arView)
-        if let tappedEntity = arView.entity(at: tappedLocation) {
-            ARViewModel.shared.userSelectedObject = VirtualGallery.shared.collection.first(where: { $0.id.uuidString == tappedEntity.name })
+        if let tappedObject = arView.entity(at: touches.first!.location(in: arView)) {
+            if let associatedVirtualObject = VirtualGallery.shared.collection.first(where: { $0.id.uuidString == tappedObject.name }), !associatedVirtualObject.isSelected {
+                
+                if (VirtualGallery.shared.isObjectSelected) {
+                    VirtualGallery.shared.selectedGalleryObject.isSelected = false
+                }
+                VirtualGallery.shared.isObjectSelected = true
+                associatedVirtualObject.isSelected = true
+            }
         } else {
-            ARViewModel.shared.userSelectedObject = nil
-            withAnimation {
-                ARViewModel.shared.bottomSheetState = .none
+            if VirtualGallery.shared.isObjectSelected {
+                VirtualGallery.shared.selectedGalleryObject.isSelected = false
+                VirtualGallery.shared.isObjectSelected = false
             }
         }
     }
+    
+//    @MainActor override dynamic func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//
+//        guard !touches.isEmpty else { return }
+//        let tappedLocation = touches.first!.location(in: arView)
+//        if let tappedEntity = arView.entity(at: tappedLocation) {
+//            ARViewModel.shared.userSelectedObject = VirtualGallery.shared.collection.first(where: { $0.id.uuidString == tappedEntity.name })
+//        } else {
+//            ARViewModel.shared.userSelectedObject = nil
+//            withAnimation {
+//                ARViewModel.shared.bottomSheetState = .none
+//            }
+//        }
+//    }
 }

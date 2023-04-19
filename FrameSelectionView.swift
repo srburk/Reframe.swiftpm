@@ -9,13 +9,13 @@ import SwiftUI
 
 struct FrameSelectionView: View {
     
-    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
+//    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
     
 //    @Binding var frame: String
 //    @Binding var mattePercentage: CGFloat
 //    @Binding var frameColor: Color
     
-    @Binding var galleryObject: VirtualGallery.GalleryObject
+    @State var galleryObject: VirtualGallery.GalleryObject
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
@@ -28,7 +28,7 @@ struct FrameSelectionView: View {
                 Spacer()
                 
                 Button {
-                    arVM.bottomSheetState = .userSelection
+                    VirtualGallery.shared.bottomSheetState = .normal
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .symbolRenderingMode(.hierarchical)
@@ -36,7 +36,7 @@ struct FrameSelectionView: View {
                         .font(.title)
                 }
             }
-            .padding(.trailing)
+            .padding([.trailing])
             
             VStack(alignment: .leading) {
                 HStack {
@@ -93,6 +93,26 @@ struct FrameSelectionView: View {
             .padding(.trailing)
             
             Spacer()
+            
+            if galleryObject.isSelected {
+                Button {
+                    Task {
+                        await VirtualGallery.shared.replaceObject(galleryObject)
+                    }
+                } label: {
+                    HStack {
+                        Spacer()
+                        Text("Apply")
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .frame(width: .infinity, height: 50)
+                    .background(.blue, in: RoundedRectangle(cornerRadius: 15))
+                }
+                .buttonStyle(.plain)
+                .padding(.trailing)
+                .padding(.bottom, 10)
+            }
         }
         .padding([.leading])
     }
@@ -105,6 +125,7 @@ struct FrameSelectionView_Previews: PreviewProvider {
             Spacer()
             
             VStack {
+                FrameSelectionView(galleryObject: VirtualGallery.GalleryObject(image: UIImage(), frameColor: .blue))
 //                FrameSelectionView(frame: .constant("Wood"), mattePercentage: .constant(0.2), frameColor: .constant(.black))
             }
             .padding(.top)

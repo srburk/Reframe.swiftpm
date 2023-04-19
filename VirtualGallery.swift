@@ -11,26 +11,58 @@ import UIKit
 import RealityKit
 import SwiftUI
 
+enum BottomSheetState {
+    case normal, pictureSelection, frameSelection, newFrame
+    
+    func bottomSheetHeight() -> CGFloat {
+        switch (self) {
+            case .normal:
+                return 0
+            default:
+                return 600
+        }
+    }
+}
+
 final class VirtualGallery: ObservableObject {
     
     static let shared = VirtualGallery()
     
+    // MARK: Published properties
+    @Published var loadingNewObject: Bool = false
+    @Published var bottomSheetState: BottomSheetState = .normal
+    @Published var isObjectSelected: Bool = false {
+        didSet {
+            if (!isObjectSelected) {
+                self.bottomSheetState = .normal
+            }
+        }
+    }
+
+    // potentially dangerous func...
+    public var selectedGalleryObject: GalleryObject {
+        return collection.first(where: { $0.isSelected })!
+    }
+    
     let arView = GalleryView(frame: .zero)
     
-    struct GalleryObject: Equatable {
+    class GalleryObject {
+        
         var id: UUID
         var image: UIImage
         var frameName: String
         var frameColor: Color
         var matteSize: CGFloat // between 0 and 1
-        var postion: SIMD3<Float>
+//        var postion: SIMD3<Float>
         
-        init(image: UIImage, frameURL: String = ContentService.frames.first!.key, matteSize: CGFloat = 0.2, position: SIMD3<Float> = .zero, frameColor: Color) {
+        var isSelected: Bool = false
+        
+        init(image: UIImage, frameURL: String = ContentService.frames.first!.key, matteSize: CGFloat = 0.2, frameColor: Color) {
             self.id = UUID()
             self.image = image
             self.frameName = frameURL
             self.matteSize = matteSize
-            self.postion = position
+//            self.postion = position
             self.frameColor = frameColor
         }
     }
@@ -42,7 +74,7 @@ final class VirtualGallery: ObservableObject {
         }
     }
     
-    @Published private(set) var collection: [GalleryObject] = []
+    private(set) var collection: [GalleryObject] = []
         
     private var mainAnchor: AnchorEntity? {
         return arView.scene.anchors.first as? AnchorEntity
@@ -75,6 +107,7 @@ extension VirtualGallery {
             print("\t\t Frame Color: \(object.frameColor.description)")
             print("\t\t Image: \(object.image.description)")
             print("\t\t Matte Size: \(object.matteSize)")
+            print("\t\t \((object.isSelected) ? "SELECTED" : "NOT SELECTED")")
         }
     }
     
@@ -82,7 +115,7 @@ extension VirtualGallery {
     public func replaceObject(_ object: GalleryObject) async {
         guard let objectToRemove = (mainAnchor?.children.first(where: { $0.name == object.id.uuidString })) else { return }
         
-        ARViewModel.shared.loadingNewObject = true
+        self.loadingNewObject = true
         
         var cancellable: AnyCancellable? = nil
         cancellable = ModelEntity.loadModelAsync(contentsOf: ContentService.frames[object.frameName]!)
@@ -112,7 +145,11 @@ extension VirtualGallery {
                     
                     mainAnchor.addChild(frameEntity)
                     
-                    ARViewModel.shared.loadingNewObject = false
+                    //MARK: Debug
+                    print("Successfully loaded object")
+                    self.debugReport()
+                    
+                    self.loadingNewObject = false
                 }
                 cancellable?.cancel()
             })
@@ -121,7 +158,7 @@ extension VirtualGallery {
     @MainActor
     public func addObject(_ object: GalleryObject) async {
         
-        ARViewModel.shared.loadingNewObject = true
+        self.loadingNewObject = true
         
         var cancellable: AnyCancellable? = nil
         cancellable = ModelEntity.loadModelAsync(contentsOf: ContentService.frames[object.frameName]!)
@@ -148,8 +185,12 @@ extension VirtualGallery {
                     mainAnchor.addChild(frameEntity)
                     
                     self.collection.append(object)
+                    
+                    //MARK: Debug
                     print("Successfully added object")
-                    ARViewModel.shared.loadingNewObject = false
+                    self.debugReport()
+                    
+                    self.loadingNewObject = false
                 }
                 cancellable?.cancel()
             })
@@ -160,6 +201,9 @@ extension VirtualGallery {
         guard let objectToRemove = mainAnchor.children.first(where: { $0.name == object.id.uuidString }) else { return }
         mainAnchor.removeChild(objectToRemove)
         collection.removeAll(where: { $0.id == object.id })
+        
+        //MARK: Debug
         print("Successfully removed object")
+        self.debugReport()
     }
 }

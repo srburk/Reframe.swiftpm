@@ -10,13 +10,13 @@ import RealityKit
 
 struct PictureSelectionView: View {
     
-    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
+//    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
     
     @State private var showingImagePickerView = false
     @State private var showingCameraPickerView = false
 
 //    @Binding var inputImage: UIImage
-    @Binding var galleryObject: VirtualGallery.GalleryObject
+    @State var galleryObject: VirtualGallery.GalleryObject
         
     var body: some View {
         
@@ -30,7 +30,7 @@ struct PictureSelectionView: View {
                 Spacer()
                 
                 Button {
-                    arVM.bottomSheetState = .none
+                    VirtualGallery.shared.bottomSheetState = .normal
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .symbolRenderingMode(.hierarchical)
@@ -38,8 +38,8 @@ struct PictureSelectionView: View {
                         .font(.title)
                 }
             }
-            .padding(.trailing)
-            
+            .padding([.trailing, .top])
+
             VStack(alignment: .leading) {
                 Text("Historical")
                     .font(.system(size: 15, weight: .semibold))
@@ -112,19 +112,29 @@ struct PictureSelectionView: View {
                                 
                     }
                     .buttonStyle(.plain)
-
-//                    ForEach(ContentService.images.custom, id: \.self) { imageName in
-//                        Image(uiImage: ContentService.images.customImage(imageName))
-//                            .resizable()
-//                            .aspectRatio(contentMode: .fill)
-//                            .frame(width: 100, height: 100)
-//                            .clipShape(RoundedRectangle(cornerRadius: 15))
-//                            .onTapGesture {
-//
-//                    }
                     
                     Spacer()
                 }
+            }
+            
+            if galleryObject.isSelected {
+                Button {
+                    Task {
+                        await VirtualGallery.shared.replaceObject(galleryObject)
+                    }
+                } label: {
+                    HStack {
+                        Spacer()
+                        Text("Apply")
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .frame(width: .infinity, height: 50)
+                    .background(.blue, in: RoundedRectangle(cornerRadius: 15))
+                }
+                .buttonStyle(.plain)
+                .padding(.trailing)
+                .padding(.bottom, 10)
             }
         }
         
@@ -140,10 +150,6 @@ struct PictureSelectionView: View {
             ImagePickerComponent(image: $galleryObject.image, sourceType: .camera)
                 .ignoresSafeArea(.all)
         })
-        
-//        .onChange(of: inputImage) { _ in
-//            loadCustomImage()
-//        }
     }
 }
 
@@ -154,6 +160,7 @@ struct PictureSelectionView_Previews: PreviewProvider {
             Spacer()
             
             VStack {
+                PictureSelectionView(galleryObject: VirtualGallery.GalleryObject(image: UIImage(), frameColor: .black))
 //                PictureSelectionView(gall: .constant(UIImage(named: "MonaLisa")!))
             }
             .padding(.top)
