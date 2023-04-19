@@ -146,7 +146,7 @@ struct ARViewOverlay: View {
                         }
                         
                     case .pictureSelection:
-                        PictureSelectionView(galleryObject: virtualGallery.selectedGalleryObject)
+                        PictureSelectionView(image: $virtualGallery.collection.first(where: { $0.isSelected.wrappedValue })!.image)
                     case .frameSelection:
                         FrameSelectionView(galleryObject: virtualGallery.selectedGalleryObject)
                     case .newFrame:

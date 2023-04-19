@@ -80,15 +80,15 @@ final class VirtualGallery: ObservableObject {
     
     let arView = GalleryView(frame: .zero)
     
-    class GalleryObject {
+    class GalleryObject: ObservableObject {
         
         var id: UUID
-        var image: UIImage
-        var frameName: String
-        var frameColor: Color
-        var matteSize: CGFloat // between 0 and 1
+        @Published var image: UIImage
+        @Published var frameName: String
+        @Published var frameColor: Color
+        @Published var matteSize: CGFloat // between 0 and 1
         
-        var isSelected: Bool = false
+        @Published var isSelected: Bool = false
         
         init(image: UIImage, frameURL: String = ContentService.frames.first!.key, matteSize: CGFloat = 0.2, frameColor: Color) {
             self.id = UUID()
@@ -118,7 +118,7 @@ final class VirtualGallery: ObservableObject {
         }
     }
     
-    private(set) var collection: [GalleryObject] = []
+    public var collection: [GalleryObject] = []
         
     private var mainAnchor: AnchorEntity? {
         return arView.scene.anchors.first as? AnchorEntity

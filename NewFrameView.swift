@@ -33,7 +33,7 @@ struct NewFrameView: View {
             
             switch (newFrameCreationStage) {
                 case NewFrameCreationStage.image:
-                    PictureSelectionView(galleryObject: newGalleryObject)
+                    PictureSelectionView(image: $newGalleryObject.image)
                 case NewFrameCreationStage.frame:
 //                    EmptyView()
                     FrameSelectionView(galleryObject: newGalleryObject)

@@ -12,8 +12,16 @@ import PhotosUI
 struct PictureSelectionView: View {
         
     @State private var showingImagePickerView = false
-
-    @State var galleryObject: VirtualGallery.GalleryObject
+    
+    @Binding var image: UIImage {
+        didSet {
+            if (VirtualGallery.shared.bottomSheetState == .pictureSelection) {
+                Task {
+                    await VirtualGallery.shared.replaceObject(VirtualGallery.shared.selectedGalleryObject)
+                }
+            }
+        }
+    }
         
     var body: some View {
         
@@ -35,7 +43,7 @@ struct PictureSelectionView: View {
                         .font(.title)
                 }
             }
-            .padding((galleryObject.isSelected) ? [.trailing, .top] : [.trailing])
+//            .padding((galleryObject.isSelected) ? [.trailing, .top] : [.trailing])
 
             VStack(alignment: .leading) {
                 Text("Historical")
@@ -47,14 +55,14 @@ struct PictureSelectionView: View {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 18)
                                     .frame(width: 110, height: 110)
-                                    .foregroundColor((UIImage(named: image) == galleryObject.image) ? .gray : Color.clear)
+                                    .foregroundColor((UIImage(named: image) == self.image) ? .accentColor : Color.clear)
                                 Image(image)
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 100, height: 100)
                                     .clipShape(RoundedRectangle(cornerRadius: 15))
                                     .onTapGesture {
-                                        self.galleryObject.image = UIImage(named: image)!
+                                        self.image = UIImage(named: image)!
                                     }
                             }
                         }
@@ -72,14 +80,14 @@ struct PictureSelectionView: View {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 18)
                                     .frame(width: 110, height: 110)
-                                    .foregroundColor((UIImage(named: image) == galleryObject.image) ? .gray : Color.clear)
+                                    .foregroundColor((UIImage(named: image) == self.image) ? .accentColor : Color.clear)
                                 Image(image)
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 100, height: 100)
                                     .clipShape(RoundedRectangle(cornerRadius: 15))
                                     .onTapGesture {
-                                        self.galleryObject.image = UIImage(named: image)!
+                                        self.image = UIImage(named: image)!
                                     }
                             }
                         }
@@ -95,7 +103,9 @@ struct PictureSelectionView: View {
                 HStack {
                     
                     Button {
-                        showingImagePickerView = true
+                        Task {
+                            showingImagePickerView = true
+                        }
                     } label: {
                         Image(systemName: "plus")
                          .font(.system(size: 25))
@@ -109,27 +119,6 @@ struct PictureSelectionView: View {
                     Spacer()
                 }
             }
-            
-            if galleryObject.isSelected {
-                Button {
-                    Task {
-                        await VirtualGallery.shared.replaceObject(galleryObject)
-                        VirtualGallery.shared.bottomSheetState = .normal
-                    }
-                } label: {
-                    HStack {
-                        Spacer()
-                        Text("Apply")
-                            .foregroundColor(.white)
-                        Spacer()
-                    }
-                    .frame(width: .infinity, height: 50)
-                    .background(.blue, in: RoundedRectangle(cornerRadius: 15))
-                }
-                .buttonStyle(.plain)
-                .padding(.trailing)
-                .padding(.bottom, 10)
-            }
         }
         
         .padding(.leading)
@@ -137,7 +126,7 @@ struct PictureSelectionView: View {
         Spacer()
         
         .sheet(isPresented: $showingImagePickerView) {
-            ImagePickerComponent(image: $galleryObject.image, sourceType: .photoLibrary)
+            ImagePickerComponent(image: $image, sourceType: .photoLibrary)
         }
     }
 }
@@ -186,8 +175,8 @@ struct PictureSelectionView_Previews: PreviewProvider {
             Spacer()
             
             VStack {
-                PictureSelectionView(galleryObject: VirtualGallery.GalleryObject(image: UIImage(), frameColor: .black))
-//                PictureSelectionView(gall: .constant(UIImage(named: "MonaLisa")!))
+//                PictureSelectionView(galleryObject: VirtualGallery.GalleryObject(image: UIImage(), frameColor: .black))
+                PictureSelectionView(image: .constant(UIImage(named: "MonaLisa")!))
             }
             .padding(.top)
             
