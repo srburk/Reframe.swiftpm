@@ -61,15 +61,9 @@ struct ARViewOverlay: View {
             }
             
             Spacer()
-            
-//            boxedControl(icon: "pause.fill", description: "Pause") {
-//                withAnimation {
-//                    virtualGallery.isARSessionActive = false
-//                }
-//            }
-            
+
             boxedControl(icon: "person.2.fill", description: "Connect") {
-                virtualGallery.debugReport()
+                virtualGallery.bottomSheetState = .collaboration
             }
             .padding(.trailing)
         }
@@ -157,6 +151,8 @@ struct ARViewOverlay: View {
                         FrameSelectionView(galleryObject: virtualGallery.selectedGalleryObject)
                     case .newFrame:
                         NewFrameView()
+                    case .collaboration:
+                        Text("Collaboration!")
                 }
             }
             .padding([.top])

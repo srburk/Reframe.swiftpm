@@ -9,6 +9,7 @@ import Foundation
 import RealityKit
 import ARKit
 import SwiftUI
+import MultipeerConnectivity
 
 // MARK: Maybe keep as seperate class for handling certain events?
 class GalleryView: ARView {
@@ -17,6 +18,7 @@ class GalleryView: ARView {
         let sessionConfiguration = ARWorldTrackingConfiguration()
         sessionConfiguration.planeDetection = [.vertical]
         sessionConfiguration.frameSemantics = .personSegmentationWithDepth
+        sessionConfiguration.isCollaborationEnabled = true
         return sessionConfiguration
     }
         
@@ -35,6 +37,8 @@ class GalleryView: ARView {
         arView.renderOptions = .disableMotionBlur
                 
         arView.scene.anchors.append(mainAnchor)
+        
+        arView.scene.synchronizationService = try? MultipeerConnectivityService(session: MultipeerService.shared.session)
         
         arView.session.run(GalleryView.defaultSessionConfig, options: .resetTracking)
         
@@ -61,6 +65,8 @@ class GalleryView: ARView {
             if VirtualGallery.shared.isObjectSelected {
                 VirtualGallery.shared.selectedGalleryObject.isSelected = false
                 VirtualGallery.shared.isObjectSelected = false
+            } else {
+                VirtualGallery.shared.bottomSheetState = .normal
             }
         }
     }

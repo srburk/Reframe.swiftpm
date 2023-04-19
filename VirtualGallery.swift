@@ -12,7 +12,7 @@ import RealityKit
 import SwiftUI
 
 enum BottomSheetState {
-    case normal, pictureSelection, frameSelection, newFrame
+    case normal, pictureSelection, frameSelection, newFrame, collaboration
     
     func bottomSheetHeight() -> CGFloat {
         switch (self) {
@@ -22,6 +22,10 @@ enum BottomSheetState {
                 return 600
         }
     }
+}
+
+enum MultipeerState {
+    case none, advertising, browsing
 }
 
 final class VirtualGallery: ObservableObject {
@@ -35,6 +39,26 @@ final class VirtualGallery: ObservableObject {
         didSet {
             if (!isObjectSelected) {
                 self.bottomSheetState = .normal
+            }
+        }
+    }
+    
+    let multipeer = MultipeerService.shared
+    
+    @Published var multipeerState = MultipeerState.none {
+        didSet {
+            switch (multipeerState) {
+                case .none:
+                    multipeer.nearbyServiceAdvertiser.stopAdvertisingPeer()
+                    multipeer.nearbyServiceBrowser.stopBrowsingForPeers()
+                case .advertising:
+                    multipeer.nearbyServiceBrowser.stopBrowsingForPeers()
+                    multipeer.nearbyServiceAdvertiser.startAdvertisingPeer()
+                    print("Started advertising service")
+                case .browsing:
+                    multipeer.nearbyServiceBrowser.startBrowsingForPeers()
+                    multipeer.nearbyServiceAdvertiser.stopAdvertisingPeer()
+                    print("Started browsing services")
             }
         }
     }
