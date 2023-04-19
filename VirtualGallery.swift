@@ -152,6 +152,7 @@ extension VirtualGallery {
                     self.arView.installGestures([.translation, .rotation, .scale], for: frameEntity)
                     
                     frameEntity.position = objectToRemove.position
+                    frameEntity.transform = objectToRemove.transform
                     
                     mainAnchor.removeChild(objectToRemove)
                     

@@ -63,12 +63,12 @@ struct PictureSelectionView: View {
             }
             
             VStack(alignment: .leading) {
-                Text("Abstract")
+                Text("Contemporary")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.gray)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(ContentService.images.abstract, id: \.self) { image in
+                        ForEach(ContentService.images.contemporary, id: \.self) { image in
                             ZStack {
                                 RoundedRectangle(cornerRadius: 18)
                                     .frame(width: 110, height: 110)

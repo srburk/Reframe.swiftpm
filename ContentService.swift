@@ -19,7 +19,7 @@ final class ContentService {
             "TheLastSupper",
             "TheScream"
         ]
-        static var abstract = [
+        static var contemporary = [
             "QuatreEspacesACroixBrisee"
         ]
         static var custom: [String] {
