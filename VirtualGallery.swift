@@ -68,9 +68,21 @@ final class VirtualGallery: ObservableObject {
     }
     
     func captureScreen() {
+        
+        let whiteUIView = UIView(frame: arView.bounds)
+        whiteUIView.backgroundColor = .init(white: 1.0, alpha: 1.0)
+        arView.addSubview(whiteUIView)
         arView.snapshot(saveToHDR: false) { image in
             guard (image != nil) else { return }
             UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
+        }
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        
+        Task {
+            try await Task.sleep(nanoseconds: UInt64(0.35 * Double(NSEC_PER_SEC)))
+            if let whiteView = await arView.subviews.last {
+                await whiteView.removeFromSuperview()
+            }
         }
     }
     

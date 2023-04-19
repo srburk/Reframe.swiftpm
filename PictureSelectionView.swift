@@ -38,7 +38,7 @@ struct PictureSelectionView: View {
                         .font(.title)
                 }
             }
-            .padding([.trailing, .top])
+            .padding((galleryObject.isSelected) ? [.trailing, .top] : [.trailing])
 
             VStack(alignment: .leading) {
                 Text("Historical")
