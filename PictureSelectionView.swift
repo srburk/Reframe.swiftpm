@@ -9,13 +9,10 @@ import SwiftUI
 import RealityKit
 
 struct PictureSelectionView: View {
-    
-//    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
-    
+        
     @State private var showingImagePickerView = false
-    @State private var showingCameraPickerView = false
+//    @State private var showingCameraPickerView = false
 
-//    @Binding var inputImage: UIImage
     @State var galleryObject: VirtualGallery.GalleryObject
         
     var body: some View {
@@ -71,12 +68,20 @@ struct PictureSelectionView: View {
                     .foregroundColor(.gray)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(0..<5) { _ in
-                            Image("MonaLisa")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 100, height: 100)
-                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                        ForEach(ContentService.images.abstract, id: \.self) { image in
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 18)
+                                    .frame(width: 110, height: 110)
+                                    .foregroundColor((UIImage(named: image) == galleryObject.image) ? .gray : Color.clear)
+                                Image(image)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 100, height: 100)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                                    .onTapGesture {
+                                        self.galleryObject.image = UIImage(named: image)!
+                                    }
+                            }
                         }
                     }
                 }
@@ -88,28 +93,16 @@ struct PictureSelectionView: View {
                     .foregroundColor(.gray)
                 
                 HStack {
-                    Menu {
-                        
-                        Button {
-                            showingCameraPickerView = true
-                        } label: {
-                            Label("Take Photo", systemImage: "camera")
-                        }
-                        
-                        Button {
-                            showingImagePickerView = true
-                        } label: {
-                            Label("Photo Library", systemImage: "photo.on.rectangle")
-                        }
-
+                    
+                    Button {
+                        showingImagePickerView = true
                     } label: {
-                           Image(systemName: "plus")
-                            .font(.system(size: 25))
-                            .foregroundColor(.gray)
-                            .frame(width: 100, height: 100)
-                            .background(.ultraThickMaterial)
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
-                                
+                        Image(systemName: "plus")
+                         .font(.system(size: 25))
+                         .foregroundColor(.gray)
+                         .frame(width: 100, height: 100)
+                         .background(.ultraThickMaterial)
+                         .clipShape(RoundedRectangle(cornerRadius: 15))
                     }
                     .buttonStyle(.plain)
                     
@@ -121,6 +114,7 @@ struct PictureSelectionView: View {
                 Button {
                     Task {
                         await VirtualGallery.shared.replaceObject(galleryObject)
+                        VirtualGallery.shared.bottomSheetState = .normal
                     }
                 } label: {
                     HStack {
@@ -146,10 +140,10 @@ struct PictureSelectionView: View {
             ImagePickerComponent(image: $galleryObject.image, sourceType: .photoLibrary)
         }
         
-        .fullScreenCover(isPresented: $showingCameraPickerView, content: {
-            ImagePickerComponent(image: $galleryObject.image, sourceType: .camera)
-                .ignoresSafeArea(.all)
-        })
+//        .fullScreenCover(isPresented: $showingCameraPickerView, content: {
+//            ImagePickerComponent(image: $galleryObject.image, sourceType: .camera)
+//                .ignoresSafeArea(.all)
+//        })
     }
 }
 

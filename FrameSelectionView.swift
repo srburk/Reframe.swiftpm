@@ -98,6 +98,7 @@ struct FrameSelectionView: View {
                 Button {
                     Task {
                         await VirtualGallery.shared.replaceObject(galleryObject)
+                        VirtualGallery.shared.bottomSheetState = .normal
                     }
                 } label: {
                     HStack {

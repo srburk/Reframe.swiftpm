@@ -15,7 +15,12 @@ final class ContentService {
         static var historical = [
             "MonaLisa",
             "StarryNight",
-            "GirlWithAPearlEarring"
+            "GirlWithAPearlEarring",
+            "TheLastSupper",
+            "TheScream"
+        ]
+        static var abstract = [
+            "QuatreEspacesACroixBrisee"
         ]
         static var custom: [String] {
             guard let documentsDirectory = ContentService.documentDirectory() else { return [] }
