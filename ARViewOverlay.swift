@@ -96,10 +96,15 @@ struct ARViewOverlay: View {
 //                        if let selectedEntity = arVM.userSelectedObject {
 //                            VirtualGallery.shared.removeObject(selectedEntity)
 //                        }
+                        virtualGallery.removeObject(virtualGallery.selectedGalleryObject)
                     }
                 } label: {
                     Label("Delete", systemImage: "trash")
                 }
+                
+                Divider()
+                
+                Text(virtualGallery.realWorldSizeLabel)
                 
             } label: {
                 VStack(spacing: 5) {
@@ -146,6 +151,7 @@ struct ARViewOverlay: View {
                         } else {
                             barOverlayControls()
                         }
+                        
                     case .pictureSelection:
                         PictureSelectionView(galleryObject: virtualGallery.selectedGalleryObject)
                     case .frameSelection:

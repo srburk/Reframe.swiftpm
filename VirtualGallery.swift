@@ -53,6 +53,14 @@ final class VirtualGallery: ObservableObject {
         return collection.first(where: { $0.isSelected })!
     }
     
+    public var realWorldSizeLabel: String {
+        if let object = (mainAnchor?.children.first(where: { $0.name == selectedGalleryObject.id.uuidString })) as? ModelEntity, let model = object.model {
+            return "\(String(format: "%.2f", model.width() * 100 / 2.54))in × \(String(format: "%.2f",model.height() * 100 / 2.54))in"
+        } else {
+            return ""
+        }
+    }
+    
     let arView = GalleryView(frame: .zero)
     
     class GalleryObject {
@@ -231,6 +239,9 @@ extension VirtualGallery {
         guard let objectToRemove = mainAnchor.children.first(where: { $0.name == object.id.uuidString }) else { return }
         mainAnchor.removeChild(objectToRemove)
         collection.removeAll(where: { $0.id == object.id })
+        
+        self.isObjectSelected = false
+        self.bottomSheetState = .normal
         
         //MARK: Debug
         print("Successfully removed object")
