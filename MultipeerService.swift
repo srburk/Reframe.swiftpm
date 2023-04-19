@@ -8,14 +8,35 @@
 import Foundation
 import MultipeerConnectivity
 
-final class MultipeerService: NSObject {
+final class MultipeerService: NSObject, ObservableObject {
     
     static let shared = MultipeerService()
+        
+    @Published var multipeerState = MultipeerState.none {
+        didSet {
+            switch (multipeerState) {
+                case .none:
+                    nearbyServiceAdvertiser.stopAdvertisingPeer()
+                    nearbyServiceBrowser.stopBrowsingForPeers()
+                case .advertising:
+                    self.foundAdvertisers = []
+                    nearbyServiceBrowser.stopBrowsingForPeers()
+                    nearbyServiceAdvertiser.startAdvertisingPeer()
+                    print("Started advertising service")
+                case .browsing:
+                    nearbyServiceBrowser.startBrowsingForPeers()
+                    nearbyServiceAdvertiser.stopAdvertisingPeer()
+                    print("Started browsing services")
+            }
+        }
+    }
+    
+    @Published var foundAdvertisers: [MCPeerID] = []
     
     public let session: MCSession
     
-    public let nearbyServiceAdvertiser: MCNearbyServiceAdvertiser
-    public let nearbyServiceBrowser: MCNearbyServiceBrowser
+    private let nearbyServiceAdvertiser: MCNearbyServiceAdvertiser
+    private let nearbyServiceBrowser: MCNearbyServiceBrowser
     
     private let peerID = UIDevice.modelName
     
@@ -31,9 +52,22 @@ final class MultipeerService: NSObject {
     }
 }
 
+extension MultipeerService {
+    static var preview: MultipeerService {
+        let service = MultipeerService()
+        
+        service.foundAdvertisers = [
+            .init(displayName: "iPad Pro"),
+            .init(displayName: "Sam's iPhone 14 Pro")
+        ]
+        
+        return service
+    }
+}
+
 extension MultipeerService: MCNearbyServiceBrowserDelegate {
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        print("FOUND PEER FOR SERVICE: \(peerID.displayName)")
+        foundAdvertisers.append(peerID)
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
@@ -41,6 +75,10 @@ extension MultipeerService: MCNearbyServiceBrowserDelegate {
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) { }
+    
+    func sendRequest(to peerID: MCPeerID) {
+        self.nearbyServiceBrowser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
+    }
 }
 
 extension MultipeerService: MCNearbyServiceAdvertiserDelegate {
@@ -50,6 +88,6 @@ extension MultipeerService: MCNearbyServiceAdvertiserDelegate {
     }
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        print("Received invitation from peer: \(peerID.displayName)")
+        invitationHandler(true, self.session)
     }
 }

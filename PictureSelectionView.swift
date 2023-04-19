@@ -19,8 +19,6 @@ struct PictureSelectionView: View {
                 Task {
                     await VirtualGallery.shared.replaceObject(VirtualGallery.shared.selectedGalleryObject)
                 }
-            } else {
-                print("Changed image but did not reload")
             }
         }
     }

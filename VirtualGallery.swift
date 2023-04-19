@@ -42,26 +42,6 @@ final class VirtualGallery: ObservableObject {
             }
         }
     }
-    
-    let multipeer = MultipeerService.shared
-    
-    @Published var multipeerState = MultipeerState.none {
-        didSet {
-            switch (multipeerState) {
-                case .none:
-                    multipeer.nearbyServiceAdvertiser.stopAdvertisingPeer()
-                    multipeer.nearbyServiceBrowser.stopBrowsingForPeers()
-                case .advertising:
-                    multipeer.nearbyServiceBrowser.stopBrowsingForPeers()
-                    multipeer.nearbyServiceAdvertiser.startAdvertisingPeer()
-                    print("Started advertising service")
-                case .browsing:
-                    multipeer.nearbyServiceBrowser.startBrowsingForPeers()
-                    multipeer.nearbyServiceAdvertiser.stopAdvertisingPeer()
-                    print("Started browsing services")
-            }
-        }
-    }
 
     // potentially dangerous func...
     public var selectedGalleryObject: GalleryObject {

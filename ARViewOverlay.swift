@@ -152,7 +152,7 @@ struct ARViewOverlay: View {
                     case .newFrame:
                         NewFrameView()
                     case .collaboration:
-                        Text("Collaboration!")
+                        MutlipeerView()
                 }
             }
             .padding([.top])
