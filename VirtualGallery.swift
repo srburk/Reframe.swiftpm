@@ -191,8 +191,8 @@ extension VirtualGallery {
                     mainAnchor.addChild(frameEntity)
                     
                     //MARK: Debug
-                    print("Successfully loaded object")
-                    self.debugReport()
+//                    print("Successfully loaded object")
+//                    self.debugReport()
                     
                     self.loadingNewObject = false
                 }
@@ -232,8 +232,8 @@ extension VirtualGallery {
                     self.collection.append(object)
                     
                     //MARK: Debug
-                    print("Successfully added object")
-                    self.debugReport()
+//                    print("Successfully added object")
+//                    self.debugReport()
                     
                     self.loadingNewObject = false
                 }
@@ -251,7 +251,7 @@ extension VirtualGallery {
         self.bottomSheetState = .normal
         
         //MARK: Debug
-        print("Successfully removed object")
-        self.debugReport()
+//        print("Successfully removed object")
+//        self.debugReport()
     }
 }

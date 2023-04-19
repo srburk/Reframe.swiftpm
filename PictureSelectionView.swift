@@ -19,6 +19,8 @@ struct PictureSelectionView: View {
                 Task {
                     await VirtualGallery.shared.replaceObject(VirtualGallery.shared.selectedGalleryObject)
                 }
+            } else {
+                print("Changed image but did not reload")
             }
         }
     }
@@ -43,7 +45,7 @@ struct PictureSelectionView: View {
                         .font(.title)
                 }
             }
-//            .padding((galleryObject.isSelected) ? [.trailing, .top] : [.trailing])
+            .padding(.trailing)
 
             VStack(alignment: .leading) {
                 Text("Historical")
@@ -126,7 +128,7 @@ struct PictureSelectionView: View {
         Spacer()
         
         .sheet(isPresented: $showingImagePickerView) {
-            ImagePickerComponent(image: $image, sourceType: .photoLibrary)
+            ImagePickerComponent(image: $image)
         }
     }
 }
@@ -135,11 +137,10 @@ struct ImagePickerComponent: UIViewControllerRepresentable {
         
     @Binding var image: UIImage
     @Environment(\.presentationMode) var isPresented
-    var sourceType: UIImagePickerController.SourceType
-        
+    
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = self.sourceType
+        imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
         imagePicker.delegate = context.coordinator
         return imagePicker
     }
@@ -175,7 +176,6 @@ struct PictureSelectionView_Previews: PreviewProvider {
             Spacer()
             
             VStack {
-//                PictureSelectionView(galleryObject: VirtualGallery.GalleryObject(image: UIImage(), frameColor: .black))
                 PictureSelectionView(image: .constant(UIImage(named: "MonaLisa")!))
             }
             .padding(.top)
