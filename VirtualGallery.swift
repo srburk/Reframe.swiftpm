@@ -55,7 +55,9 @@ final class VirtualGallery: ObservableObject {
     
     public var realWorldSizeLabel: String {
         if let object = (mainAnchor?.children.first(where: { $0.name == selectedGalleryObject.id.uuidString })) as? ModelEntity, let model = object.model {
-            return "\(String(format: "%.2f", model.width() * 100 / 2.54))in × \(String(format: "%.2f",model.height() * 100 / 2.54))in"
+            let width = (object.transform.scale.x * Float(model.width()) * 100) / 2.54
+            let height = (object.transform.scale.y * Float(model.height()) * 100) / 2.54
+            return "\(String(format: "%.2f", width))in × \(String(format: "%.2f", height))in"
         } else {
             return ""
         }
