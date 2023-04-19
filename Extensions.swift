@@ -19,8 +19,8 @@ extension ModelComponent {
 }
 
 extension Color {
-    public static let lightGray = Color(red: 236/255, green: 236/255, blue: 237/255)
-    public static let buttonGray = Color(red: 213/255, green: 213/255, blue: 213/255)
+    public static let lightGray = Color("LightGray")
+    public static let buttonGray = Color("ButtonGray")
 }
 
 extension View {
