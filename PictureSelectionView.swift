@@ -7,11 +7,11 @@
 
 import SwiftUI
 import RealityKit
+import PhotosUI
 
 struct PictureSelectionView: View {
         
     @State private var showingImagePickerView = false
-//    @State private var showingCameraPickerView = false
 
     @State var galleryObject: VirtualGallery.GalleryObject
         
@@ -139,11 +139,43 @@ struct PictureSelectionView: View {
         .sheet(isPresented: $showingImagePickerView) {
             ImagePickerComponent(image: $galleryObject.image, sourceType: .photoLibrary)
         }
+    }
+}
+
+struct ImagePickerComponent: UIViewControllerRepresentable {
         
-//        .fullScreenCover(isPresented: $showingCameraPickerView, content: {
-//            ImagePickerComponent(image: $galleryObject.image, sourceType: .camera)
-//                .ignoresSafeArea(.all)
-//        })
+    @Binding var image: UIImage
+    @Environment(\.presentationMode) var isPresented
+    var sourceType: UIImagePickerController.SourceType
+        
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = self.sourceType
+        imagePicker.delegate = context.coordinator
+        return imagePicker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {
+
+    }
+
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(picker: self)
+    }
+    
+    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        var picker: ImagePickerComponent
+        
+        init(picker: ImagePickerComponent) {
+            self.picker = picker
+        }
+        
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            guard let selectedImage = info[.originalImage] as? UIImage else { return }
+            self.picker.image = selectedImage
+            self.picker.isPresented.wrappedValue.dismiss()
+        }
+        
     }
 }
 

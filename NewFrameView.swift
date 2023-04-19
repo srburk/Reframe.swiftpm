@@ -62,7 +62,6 @@ struct NewFrameView: View {
                 } label: {
                     Text("\((newFrameCreationStage == .image) ? "Next" : "Add")")
                 }
-//                .disabled(vm.image == nil)
             }
             .padding([.trailing, .leading], 25)
             .padding(.bottom, 30)

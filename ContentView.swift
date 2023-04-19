@@ -13,10 +13,7 @@ struct ContentView: View {
     @AppStorage("needsOnboarding") var needsOnboarding: Bool = true
     
     var body: some View {
-              
-//        if (needsOnboarding) {
-//            OnboardingView()
-//        } else {
+
             ZStack {
                 ARViewContainer()
                 ARViewOverlay()
@@ -24,7 +21,6 @@ struct ContentView: View {
             }
             .edgesIgnoringSafeArea(.all)
             .prefersPersistentSystemOverlaysHidden()
-//        }
     }
 }
 

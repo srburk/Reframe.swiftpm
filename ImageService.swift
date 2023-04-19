@@ -9,9 +9,7 @@ import Foundation
 import UIKit
 
 final class ImageService {
-    
-//    static let shared = ImageProcessingService()
-    
+        
     static func processForTexture(image: UIImage, aspectRatio: CGFloat, matteSize: CGFloat) -> CGImage? {
         
         var workingImage = image

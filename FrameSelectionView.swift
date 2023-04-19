@@ -8,13 +8,7 @@
 import SwiftUI
 
 struct FrameSelectionView: View {
-    
-//    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
-    
-//    @Binding var frame: String
-//    @Binding var mattePercentage: CGFloat
-//    @Binding var frameColor: Color
-    
+
     @State var galleryObject: VirtualGallery.GalleryObject
     
     var body: some View {

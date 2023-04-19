@@ -11,7 +11,6 @@ import ARKit
 
 struct ARViewOverlay: View {
     
-//    @ObservedObject var arVM: ARViewModel = ARViewModel.shared
     @ObservedObject var virtualGallery = VirtualGallery.shared
     
     struct OverlayBarView<Content: View>: View {
