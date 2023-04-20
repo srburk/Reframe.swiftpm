@@ -19,8 +19,12 @@ final class ContentService {
             "TheLastSupper",
             "TheScream"
         ]
-        static var contemporary = [
-            "QuatreEspacesACroixBrisee"
+        static var romantic = [
+            "StormyCoastSceneAfterAShipwreck",
+            "SalisburyCathedralfromtheBishopsGrounds",
+            "WandererInTheStorm",
+            "Sunset",
+            "TheStartoftheRaceoftheRiderlessHorses"
         ]
         static var custom: [String] {
             guard let documentsDirectory = ContentService.documentDirectory() else { return [] }

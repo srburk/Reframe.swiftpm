@@ -106,7 +106,10 @@ final class VirtualGallery: ObservableObject {
 
     private func imageMaterial(_ image: UIImage, aspectRatio: CGFloat, matteSize: CGFloat = 0.2) -> RealityKit.Material {
         var imageMaterial = SimpleMaterial()
-                
+                    
+        imageMaterial.metallic = 0
+        imageMaterial.roughness = 1.0
+        
             if let textureImage = ImageService.processForTexture(image: image, aspectRatio: aspectRatio, matteSize: matteSize) {
                 do {
                     let texture = try TextureResource.generate(from: textureImage, options: .init(semantic: .color))

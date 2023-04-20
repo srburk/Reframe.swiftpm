@@ -71,12 +71,12 @@ struct PictureSelectionView: View {
             }
             
             VStack(alignment: .leading) {
-                Text("Contemporary")
+                Text("Romantic")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.gray)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(ContentService.images.contemporary, id: \.self) { image in
+                        ForEach(ContentService.images.romantic, id: \.self) { image in
                             ZStack {
                                 RoundedRectangle(cornerRadius: 18)
                                     .frame(width: 110, height: 110)
@@ -160,7 +160,14 @@ struct ImagePickerComponent: UIViewControllerRepresentable {
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             guard let selectedImage = info[.originalImage] as? UIImage else { return }
-            self.picker.image = selectedImage
+            if (!VirtualGallery.shared.isObjectSelected) {
+                self.picker.image = selectedImage
+            } else {
+                VirtualGallery.shared.selectedGalleryObject.image = selectedImage
+                Task {
+                    await VirtualGallery.shared.replaceObject(VirtualGallery.shared.selectedGalleryObject)
+                }
+            }
             self.picker.isPresented.wrappedValue.dismiss()
         }
         

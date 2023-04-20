@@ -56,16 +56,16 @@ struct ARViewOverlay: View {
                 virtualGallery.bottomSheetState = .newFrame
             }
             .padding(.leading)
-            boxedControl(icon: "camera.fill", description: "Capture") {
-                virtualGallery.captureScreen()
-            }
             
             Spacer()
 
 //            boxedControl(icon: "person.2.fill", description: "Connect") {
 //                print("Connected peers: \(MultipeerService.shared.session.connectedPeers.count)")
 //            }
-//            .padding(.trailing)
+            boxedControl(icon: "camera.fill", description: "Capture") {
+                virtualGallery.captureScreen()
+            }
+            .padding(.trailing)
         }
     }
     
