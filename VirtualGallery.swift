@@ -51,7 +51,7 @@ final class VirtualGallery: ObservableObject {
     public var realWorldSizeLabel: String {
         if let object = (mainAnchor?.children.first(where: { $0.name == selectedGalleryObject.id.uuidString })) as? ModelEntity, let model = object.model {
             let width = (object.transform.scale.x * Float(model.width()) * 100) / 2.54
-            let height = (object.transform.scale.y * Float(model.height()) * 100) / 2.54
+            let height = (object.transform.scale.x * Float(model.height()) * 100) / 2.54
             return "\(String(format: "%.2f", width))in × \(String(format: "%.2f", height))in"
         } else {
             return ""
@@ -121,6 +121,25 @@ final class VirtualGallery: ObservableObject {
         return imageMaterial
     }
     
+    @objc private func handleGesture(_ recognizer: UIGestureRecognizer) {
+        guard let scaleGesture = recognizer as? EntityScaleGestureRecognizer else { return }
+
+        switch scaleGesture.state {
+        case .changed:
+            scaleGesture.entity?.transform.scale.y = 1.0
+        default:
+            break
+        }
+    }
+    
+    private func installGestures(for entity: HasCollision) {
+
+        arView.installGestures([.translation, .rotation], for: entity)
+        arView.installGestures(.scale, for: entity).forEach { gestureRecognizer in
+            gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
+        }
+    }
+    
 }
 
 extension VirtualGallery {
@@ -164,7 +183,9 @@ extension VirtualGallery {
                     
                     frameEntity.name = object.id.uuidString
                     frameEntity.generateCollisionShapes(recursive: true)
-                    self.arView.installGestures([.translation, .rotation, .scale], for: frameEntity)
+                    
+//                    self.arView.installGestures(.all, for: frameEntity)
+                    self.installGestures(for: frameEntity)
                     
                     frameEntity.position = objectToRemove.position
                     frameEntity.transform = objectToRemove.transform
@@ -208,8 +229,7 @@ extension VirtualGallery {
                     
                     frameEntity.name = object.id.uuidString
                     frameEntity.generateCollisionShapes(recursive: true)
-                    self.arView.installGestures([.translation, .rotation, .scale], for: frameEntity)
-                    
+                    self.installGestures(for: frameEntity)
                     mainAnchor.addChild(frameEntity)
                     
                     self.collection.append(object)
