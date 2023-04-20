@@ -16,7 +16,7 @@ struct NewFrameView: View {
     @ObservedObject var virtualGallery = VirtualGallery.shared
 
     @State private var newFrameCreationStage: NewFrameCreationStage = .image
-    @State var newGalleryObject = VirtualGallery.GalleryObject(image: UIImage(), frameColor: .black)
+    @ObservedObject var newGalleryObject = VirtualGallery.GalleryObject(image: UIImage(), frameColor: .black)
     
     func finishCreation() {
         
