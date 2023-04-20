@@ -7,67 +7,50 @@
 
 import Foundation
 import MultipeerConnectivity
+import RealityKit
 
 final class MultipeerService: NSObject, ObservableObject {
     
     static let shared = MultipeerService()
         
-    @Published var multipeerState = MultipeerState.none {
-        didSet {
-            switch (multipeerState) {
-                case .none:
-                    nearbyServiceAdvertiser.stopAdvertisingPeer()
-                    nearbyServiceBrowser.stopBrowsingForPeers()
-                case .advertising:
-                    self.foundAdvertisers = []
-                    nearbyServiceBrowser.stopBrowsingForPeers()
-                    nearbyServiceAdvertiser.startAdvertisingPeer()
-                    print("Started advertising service")
-                case .browsing:
-                    nearbyServiceBrowser.startBrowsingForPeers()
-                    nearbyServiceAdvertiser.stopAdvertisingPeer()
-                    print("Started browsing services")
-            }
-        }
-    }
-    
-    @Published var foundAdvertisers: [MCPeerID] = []
-    
     public let session: MCSession
     
     private let nearbyServiceAdvertiser: MCNearbyServiceAdvertiser
     private let nearbyServiceBrowser: MCNearbyServiceBrowser
     
-    private let peerID = UIDevice.modelName
-    
+    private let localPeer = MCPeerID(displayName: UIDevice.current.name)
+
     override init() {
-        session = MCSession(peer: MCPeerID(displayName: peerID), securityIdentity: nil, encryptionPreference: .required)
-        nearbyServiceAdvertiser = MCNearbyServiceAdvertiser(peer: MCPeerID(displayName: peerID), discoveryInfo: nil, serviceType: "reframe-collab")
-        nearbyServiceBrowser = MCNearbyServiceBrowser(peer: MCPeerID(displayName: peerID), serviceType: "reframe-collab")
+        
+        session = MCSession(peer: localPeer, securityIdentity: nil, encryptionPreference: .required)
+        nearbyServiceAdvertiser = MCNearbyServiceAdvertiser(peer: localPeer, discoveryInfo: nil, serviceType: "reframe-collab")
+        nearbyServiceBrowser = MCNearbyServiceBrowser(peer: localPeer, serviceType: "reframe-collab")
         
         super.init()
 
+        session.delegate = self
         nearbyServiceAdvertiser.delegate = self
         nearbyServiceBrowser.delegate = self
+        
+        nearbyServiceBrowser.startBrowsingForPeers()
+        nearbyServiceAdvertiser.startAdvertisingPeer()
     }
-}
-
-extension MultipeerService {
-    static var preview: MultipeerService {
-        let service = MultipeerService()
-        
-        service.foundAdvertisers = [
-            .init(displayName: "iPad Pro"),
-            .init(displayName: "Sam's iPhone 14 Pro")
-        ]
-        
-        return service
+    
+    func sendToPeers(_ data: Data, reliably: Bool, peers: [MCPeerID]) {
+        guard !peers.isEmpty else { return }
+        do {
+            try session.send(data, toPeers: peers, with: reliably ? .reliable : .unreliable)
+//            print("Sent data to peers")
+        } catch {
+            print("error sending data to peers \(peers): \(error.localizedDescription)")
+        }
     }
 }
 
 extension MultipeerService: MCNearbyServiceBrowserDelegate {
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        foundAdvertisers.append(peerID)
+        print("Found peer – \(peerID.displayName)")
+        browser.invitePeer(peerID, to: session, withContext: nil, timeout: 10)
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
@@ -75,19 +58,39 @@ extension MultipeerService: MCNearbyServiceBrowserDelegate {
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) { }
-    
-    func sendRequest(to peerID: MCPeerID) {
-        self.nearbyServiceBrowser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
-    }
 }
 
 extension MultipeerService: MCNearbyServiceAdvertiserDelegate {
     
-    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
-        print("Failed to start advertising service: \(error.localizedDescription)")
+    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
+        print("Received invitation from peer – \(peerID.displayName)")
+        invitationHandler(true, self.session)
+    }
+}
+
+extension MultipeerService: MCSessionDelegate {
+    func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
+        if state == .connected {
+            print("Peer joined")
+            
+        } else if state == .notConnected {
+            print("Peer left")
+        }
     }
     
-    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        invitationHandler(true, self.session)
+    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+
+    }
+    
+    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+        
+    }
+    
+    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
+        print("Receiving recourse: \(resourceName)")
+    }
+    
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
+        
     }
 }

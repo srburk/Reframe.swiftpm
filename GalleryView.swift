@@ -18,7 +18,7 @@ class GalleryView: ARView {
         let sessionConfiguration = ARWorldTrackingConfiguration()
         sessionConfiguration.planeDetection = [.vertical]
         sessionConfiguration.frameSemantics = .personSegmentationWithDepth
-        sessionConfiguration.isCollaborationEnabled = true
+//        sessionConfiguration.isCollaborationEnabled = true
         return sessionConfiguration
     }
         
@@ -30,15 +30,10 @@ class GalleryView: ARView {
             super.init(frame: frame, cameraMode: .ar, automaticallyConfigureSession: false)
         #endif
         
-        let mainAnchor = AnchorEntity(.plane(.vertical, classification: .wall, minimumBounds: .zero))
-        mainAnchor.name = "MainWallAnchor"
-        
         arView.renderOptions = .disableAREnvironmentLighting
         arView.renderOptions = .disableMotionBlur
-                
-        arView.scene.anchors.append(mainAnchor)
-        
-        arView.scene.synchronizationService = try? MultipeerConnectivityService(session: MultipeerService.shared.session)
+                                
+//        arView.scene.synchronizationService = try! MultipeerConnectivityService(session: MultipeerService.shared.session)
         
         arView.session.run(GalleryView.defaultSessionConfig, options: .resetTracking)
         

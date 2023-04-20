@@ -12,7 +12,7 @@ import RealityKit
 import SwiftUI
 
 enum BottomSheetState {
-    case normal, pictureSelection, frameSelection, newFrame, collaboration
+    case normal, pictureSelection, frameSelection, newFrame
     
     func bottomSheetHeight() -> CGFloat {
         switch (self) {

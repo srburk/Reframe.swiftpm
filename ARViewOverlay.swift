@@ -62,10 +62,10 @@ struct ARViewOverlay: View {
             
             Spacer()
 
-            boxedControl(icon: "person.2.fill", description: "Connect") {
-                virtualGallery.bottomSheetState = .collaboration
-            }
-            .padding(.trailing)
+//            boxedControl(icon: "person.2.fill", description: "Connect") {
+//                print("Connected peers: \(MultipeerService.shared.session.connectedPeers.count)")
+//            }
+//            .padding(.trailing)
         }
     }
     
@@ -151,8 +151,8 @@ struct ARViewOverlay: View {
                         FrameSelectionView(galleryObject: virtualGallery.selectedGalleryObject)
                     case .newFrame:
                         NewFrameView()
-                    case .collaboration:
-                        MutlipeerView()
+//                    case .collaboration:
+//                        MutlipeerView()
                 }
             }
             .padding([.top])
