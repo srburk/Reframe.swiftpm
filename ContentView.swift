@@ -17,7 +17,9 @@ struct ContentView: View {
             ZStack {
                 ARViewContainer()
                 ARViewOverlay()
-                
+                if (needsOnboarding) {
+                    OnboardingView()
+                }
             }
             .edgesIgnoringSafeArea(.all)
             .prefersPersistentSystemOverlaysHidden()
